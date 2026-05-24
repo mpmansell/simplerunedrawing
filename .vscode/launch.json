@@ -1,0 +1,53 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run SimpleRuneDrawing Main with Arguments",
+            "type": "debugpy", 
+            "request": "launch",
+            "program": "src/simplerunedrawing.py",
+            "console": "integratedTerminal",
+            "consoleName": "SimpleRuneDrawing Debug Console",
+            "args": "${command:pickArgs}",
+            "logToFile": true,
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/src"
+            }
+        },
+        {
+            "name": "Run SimpleRuneDrawing Main without Arguments",
+            "type": "debugpy", 
+            "request": "launch",
+            "program": "src/simplerunedrawing.py",
+            "console": "integratedTerminal",
+            "consoleName": "SimpleRuneDrawing Debug Console",
+            "logToFile": true,
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/src"
+            }
+        },
+        {
+            "name": "Run SimpleRuneDrawing with preset CLI Arguments",
+            "type": "debugpy", 
+            "request": "launch",
+            "program": "src/simplerunedrawing.py",
+            "args": [
+                // "--example-arg1", "value1",
+                // "--example-arg2", "value2"
+            ],
+            "console": "integratedTerminal",
+            "consoleName": "SimpleRuneDrawing CLI Args Debug Console",
+            "logToFile": true,
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/src"
+            },
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}   
