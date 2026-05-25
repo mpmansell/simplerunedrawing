@@ -10,6 +10,7 @@ Command Line Options:
     --output, -o: Output format for the drawn runes. If provided, generates a PNG image
         with the specified filename; otherwise outputs rune names as text.
         Default: "" (text output)
+    --rune-image-folder, -r: Path to a custom folder containing the rune images. 
     --verbose, -V: Enable verbose output for debugging purposes.
         Default: False
     --debug, -D: Enable debug output for debugging purposes.
@@ -26,12 +27,17 @@ Examples:
         python -m simplerunedrawing --number 1 --verbose
 """
 
-import random
-from typing import List, Tuple
+#TODO Add an option to point to a custom folder for rune image files
 
+    
+import random
+import os
+from typing import List, Tuple
+    
 import typer
 
 from simplerunedrawing import draw_runes, runes_to_string
+from create_rune_image import create_rune_layout, get_rune_image_filename, valid_rune_layouts
 
 
 
@@ -52,6 +58,12 @@ def main(
         "--output", "-o",
         help="Output format for the drawn runes. If switch applied, then a PNG image will be generated, else text."
     ),
+    rune_image_folder: str = typer.Option(
+        #r"Runes",
+        os.path.abspath("Runes"),
+        "--rune-image-folder", "-r",
+        help="Path to the folder containing the rune images"
+    ),
     verbose: bool = typer.Option(
         False,
         "-V", "--verbose",
@@ -70,15 +82,17 @@ def main(
     if verbose:
         print(f"Number of runes to draw: {number}")
         print(f"Output format: {output}")
+        print(f"Rune image folder: {rune_image_folder}")
         print(f"Verbose output: {verbose}")
         print(f"Debug output: {debug}")
         
     # run app
+    rune_draw = runes_to_string(draw_runes(number))
     if output == "":
-        print(runes_to_string(draw_runes(number)))
+        print(rune_draw)
     else:
-        raise NotImplementedError("Output format other than text is not yet implemented.")
-    
+        create_rune_layout(rune_image_folder, rune_draw).save(output)
+
 
 if __name__ == "__main__":
     app()
