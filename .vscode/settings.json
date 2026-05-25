@@ -1,3 +1,36 @@
 {
-    "workbench.colorTheme": "Red"
+    "workbench.colorTheme": "Abyss",
+    "cSpell.words": [
+        "Ansuz",
+        "Beorc",
+        "Daeg",
+        "Ehwaz",
+        "Eiwaz",
+        "Eohl",
+        "Fehu",
+        "Gifu",
+        "Hagall",
+        "Ing",
+        "Isa",
+        "isort",
+        "Jera",
+        "kenaz",
+        "lagaz",
+        "mannaz",
+        "markm",
+        "nied",
+        "Othel",
+        "Perdhro",
+        "pyrefly",
+        "Raido",
+        "Sigel",
+        "simplerunedrawing",
+        "Thurisaz",
+        "Tir",
+        "Uruz",
+        "Wunjo"
+    ],
+    "python.pyrefly.configPath": "${workspaceFolder}/pyproject.toml",
+    "python-envs.defaultEnvManager": "ms-python.python:poetry",
+    "python-envs.defaultPackageManager": "ms-python.python:poetry"
 }

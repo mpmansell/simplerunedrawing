@@ -12,7 +12,7 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.13"
 
-dependencies = []
+dependencies = ["pillow (>=12.2.0,<13.0.0)", "typer (>=0.25.1,<0.26.0)"]
 
 [dependency-groups]
 dev = [
@@ -64,6 +64,9 @@ envs = ["py312", "py313", "py314"]
 
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.29.5"
+
+[tool.pyrefly]
+preset = "legacy"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
