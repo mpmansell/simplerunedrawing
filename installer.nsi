@@ -2,8 +2,14 @@
 !include "x64.nsh"
 
 Name "DrawRunes"
-OutFile "DrawRunes-Installer.exe"
+  
+; Add Icons
+Icon "dist\drawrunes\DrawRunes.ico"
+UninstallIcon "dist\drawrunes\DrawRunes.ico"
+
+OutFile "dist\DrawRunes-Installer.exe"
 InstallDir "$PROGRAMFILES\DrawRunes"
+
 
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
@@ -16,8 +22,9 @@ Section "Install"
   File /r "dist\drawrunes\libs"
   FILE /r "dist\drawrunes\Runes"
   File "dist\drawrunes\readme.md"
-  File "dist\drawrunes\LICENSE"
+  File "dist\drawrunes\LICENSE.md"
   File "dist\drawrunes\drawrunes.exe"
+  File "dist\drawrunes\DrawRunes.ico"
   
   ; Add to PATH using registry
   SetRegView 64
@@ -36,7 +43,9 @@ Section "Install"
   ; Create uninstaller
   WriteUninstaller "$INSTDIR\Uninstall.exe"
   CreateDirectory "$SMPROGRAMS\DrawRunes"
-  CreateShortCut "$SMPROGRAMS\DrawRunes\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
+  CreateShortCut "$SMPROGRAMS\DrawRunes\Uninstall.lnk" "$INSTDIR\Uninstall.exe" "" "$INSTDIR\DrawRunes.ico"
+  CreateShortCut "$SMPROGRAMS\DrawRunes\DrawRunes.lnk" "$INSTDIR\drawrunes.exe" "" "$INSTDIR\DrawRunes.ico"
+  
 SectionEnd
 
 Section "Uninstall"

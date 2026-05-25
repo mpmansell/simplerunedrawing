@@ -27,6 +27,7 @@ RUNES: list = [
 Sides: List[str] = ["", "reversed_"]
 
 
+
 def draw_runes(num_runes: int) -> List[Tuple[int, int]]:
     """Generate a random draw of Elder Futhark runes with orientations.
     

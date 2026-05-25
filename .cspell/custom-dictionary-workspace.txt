@@ -1,10 +1,23 @@
 # Custom Dictionary Words
 annotationlib
+distpath
 drawrunes
+Erroraction
+gitbash
+HKLM
+insertmacro
+INSTFILES
+ipynb
+makensis
+noprofile
+NSIS
+onedir
 popd
 pushd
-typer
-insertmacro
+rrprint
+SETTINGCHANGE
 SMPROGRAMS
-INSTFILES
-NSIS
+specpath
+typer
+venv
+workpath

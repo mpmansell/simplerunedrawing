@@ -1,0 +1,12 @@
+
+
+expected_filenames: List[str] =
+  [ "Ansuz.png",  "Beorc.png",   "Daeg.png",  "Ehwaz.png", "Eiwaz.png",    "Eohl.png",  "Fehu.png",  "Gifu.png", 
+    "Hagall.png", "Ing.png",     "Isa.png",   "Jera.png",  "Kenaz.png",    "Lagaz.png", "Mannaz.png", "Nied.png", 
+    "Othel.png",  "Perdhro.png", "Raido.png", "Sigel.png", "Thurisaz.png", "Tir.png",   "Uruz.png",   "Wunjo.png", 
+    "reversed_Ansuz.png",    "reversed_Beorc.png",   "reversed_Daeg.png",  "reversed_Ehwaz.png", 
+    "reversed_Eiwaz.png",    "reversed_Eohl.png",    "reversed_Fehu.png",   "reversed_Gifu.png", 
+    "reversed_Hagall.png",   "reversed_Ing.png",     "reversed_Isa.png",    "reversed_Jera.png", 
+    "reversed_Kenaz.png",    "reversed_Lagaz.png",   "reversed_Mannaz.png", "reversed_Nied.png", 
+    "reversed_Othel.png",    "reversed_Perdhro.png", "reversed_Raido.png",  "reversed_Sigel.png", 
+    "reversed_Thurisaz.png", "reversed_Tir.png",     "reversed_Uruz.png",   "reversed_Wunjo.png" ]

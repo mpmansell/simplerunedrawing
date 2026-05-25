@@ -44,7 +44,7 @@ POETRY = poetry
 
 
 # Phony targets
-.PHONY: help install venv-activate show-envrun test lint format build clean clean-docs clean-all docker-build docker-run docker-shell
+.PHONY: help install venv-activate show-env run test lint format build clean clean-dist clean-all docker-build docker-run docker-shell distribution build-dist build-dist-clean dist-clean
 
 # Default target
 help:
@@ -64,7 +64,14 @@ help:
 	@echo "  make vsc            Start Visual Studio Code using the current project environment"	
 	@echo ""
 	@echo "  make distribution   Make a standalone executable distribution using PyInstaller"
+	@echo "  make build-dist     Alias for make distribution"
+	@echo "  make build-dist-clean"
+	@echo "                      Clean and rebuild distribution"
 	@echo "  make dist-clean      Clean up build artifacts from PyInstaller"
+	@echo ""
+	@echo "  make clean          Clean build artifacts (dist/, build/, *.exe, *.spec)"
+	@echo ""
+	@echo "  win-installer       Build a Windows installer using NSIS (requires makensis to be installed and in PATH)"
 	@echo ""
 	@echo "  make requirements   Export dependencies to requirements.txt"
 
@@ -134,25 +141,22 @@ vsc:
 	
 # Build a standalone executable distribution using PyInstaller
 distribution:
-	$(RUN) pyinstaller --onedir simplerunedrawing/main.py --name drawrunes --add-data "../Runes/:Runes" --add-data "../LICENSE:." --add-data "../readme.md:." --contents-directory libs --distpath dist/ --workpath build/ --specpath build/	
+	$(PYTHON) scripts/build_dist.py
 	
-	# Move the Runes directory, and readme.md file from libs to the main distribution folder
-	$(MV) dist\drawrunes\libs\Runes dist\drawrunes\Runes
-	$(MV) dist\drawrunes\libs\readme.md dist\drawrunes\readme.md
-	$(MV) dist\drawrunes\libs\LICENSE dist\drawrunes\LICENSE
-	
-	# Zip the distribution
-	$(RM) dist\drawrunes.zip
-	pushd  dist\drawrunes
-	zip -q -r ..\drawrunes.zip libs readme.md Runes drawrunes.exe
-	popd
-	
-#TODO fix makefile and build options to avoid the need for this manual moving of files after the build - ideally they should be in the right place in the first place without needing to be moved around after the fact	
-	
-# Clean up build artifacts
-dist-clean:
-	$(RM) dist
-	$(RM) build
+build-dist: distribution
+
+# Clean and rebuild distribution	
+build-dist-clean:
+	$(PYTHON) scripts/build_dist.py --clean	
+
+# Clean all build artifacts (dist/, build/, executables, spec files)
+clean:
+	$(PYTHON) scripts/dist_clean.py --force
+
+# Build a Windows installer using NSIS (requires makensis to be installed and in PATH)
+win-installer:
+	makensis installer.nsi
+
 	
 # Export requirements.txt - note that this will not include dev dependencies and is mainly for Docker use
 # Also note that 'requirements.txt' is in .gitignore to avoid confusion with Poetry's dependency management

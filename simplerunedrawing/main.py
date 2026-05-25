@@ -27,18 +27,19 @@ Examples:
         python -m simplerunedrawing --number 1 --verbose
 """
 
-#TODO Add an option to point to a custom folder for rune image files
-
+__version__ = '1.0.0'
     
 import random
 import os
+import sys
 from typing import List, Tuple
 from pathlib import Path
+from rich import print as rrprint
     
 import typer
 
 from simplerunedrawing import draw_runes, runes_to_string
-from create_rune_image import create_rune_layout, get_rune_image_filename, valid_rune_layouts
+from create_rune_image import create_rune_layout, get_rune_image_filename, valid_rune_layouts, expected_rune_filenames 
 
 __all__ = ["main"]
 
@@ -74,6 +75,11 @@ def main(
         "-V", "--verbose",
         help="Enable verbose output for debugging purposes."
     ),
+    version: bool = typer.Option(
+        False,
+        "--version", "-v",
+        help="Show the version of the application and exit."
+    ),
     debug: bool = typer.Option( 
         False,
         "-D", "--debug",
@@ -82,7 +88,23 @@ def main(
 ):
 
     if number not in Valid_Numbers:
-        raise typer.BadParameter("Number must be one of 1,3,5 or 7")        
+        raise typer.BadParameter("Number must be one of 1,3,5 or 7")   
+
+    # Get list of rune image filenames in the specified folder for validation and debugging purposes
+    rune_image_file_names = [f.name for f in Path(rune_image_folder).glob("*.png")]
+    
+    # Check for missing image files
+    expected_rune_filenames_set = set(expected_rune_filenames)
+    missing_files = expected_rune_filenames_set - set(rune_image_file_names)
+    if missing_files:
+        rrprint("=" * 70)
+        rrprint(f"[bold red]Missing rune image files: [/bold red]{missing_files}.\n")
+        rrprint("[bold red]Please ensure all expected rune images are present in the folder before restarting.")
+        sys.exit(1)   
+        
+    if version:
+        rrprint("DrawRunes {version}".format(version=__version__))
+        sys.exit(0)
 
     if verbose:
         print(f"Number of runes to draw: {number}")
@@ -91,7 +113,23 @@ def main(
         print(f"Verbose output: {verbose}")
         print(f"Debug output: {debug}")
         
+    if debug:
+        print("=" * 70)
+        print("Printing debug information about the environment and rune image folder for troubleshooting purposes.")
+        print("=" * 70)
+
+        print(f"Current working directory: {os.getcwd()}")
+        print(f"Rune image folder: {rune_image_folder}")
+        print(f"Valid rune layout combinations: {valid_rune_layouts}")
         
+        # Print the contents of the rune image folder
+        print("=" * 70)
+
+        print(f"There are {len(rune_image_file_names)} images in the folder {rune_image_file_names}")
+        print("=" * 70)
+        
+        print("\n\n")
+    
     # run app
     rune_draw = runes_to_string(draw_runes(number))
     if output == "":

@@ -18,13 +18,25 @@ import os
 from typing import List
 
 
-__all__ = ["create_rune_layout", "get_rune_image_filename", "valid_rune_layouts", "rune_image_folder"]
+__all__ = ["create_rune_layout", "get_rune_image_filename", "valid_rune_layouts", "expected_rune_filenames"]
+
+
+# List of expected filenames for icons
+expected_rune_filenames: List[str] = [
+    "Ansuz.png",  "Beorc.png",   "Daeg.png",  "Ehwaz.png", "Eiwaz.png",    "Eohl.png",  "Fehu.png",  "Gifu.png", 
+    "Hagall.png", "Ing.png",     "Isa.png",   "Jera.png",  "Kenaz.png",    "Lagaz.png", "Mannaz.png", "Nied.png", 
+    "Othel.png",  "Perdhro.png", "Raido.png", "Sigel.png", "Thurisaz.png", "Tir.png",   "Uruz.png",   "Wunjo.png", 
+    "reversed_Ansuz.png",    "reversed_Beorc.png",   "reversed_Daeg.png",  "reversed_Ehwaz.png", 
+    "reversed_Eiwaz.png",    "reversed_Eohl.png",    "reversed_Fehu.png",   "reversed_Gifu.png", 
+    "reversed_Hagall.png",   "reversed_Ing.png",     "reversed_Isa.png",    "reversed_Jera.png", 
+    "reversed_Kenaz.png",    "reversed_Lagaz.png",   "reversed_Mannaz.png", "reversed_Nied.png", 
+    "reversed_Othel.png",    "reversed_Perdhro.png", "reversed_Raido.png",  "reversed_Sigel.png", 
+    "reversed_Thurisaz.png", "reversed_Tir.png",     "reversed_Uruz.png",   "reversed_Wunjo.png" ]
 
 # Valid rune layouts
 valid_rune_layouts = [1,3,5,7]
 
-rune_image_folder = r"Runes"
-#TODO make this a user definable option in the CLI
+rune_image_folder: str = r"Runes"  # Default path to rune images - this can be overridden by the CLI option in main.py
 
 def get_rune_image_filename(name: str) -> str:
     """Generate the file path for a rune image.
@@ -70,7 +82,7 @@ def create_rune_layout(_rune_image_folder: str, runes: list[str]) -> Image.Image
     
     # Validate that all runes have corresponding image files
     missing_images: List[str] = []  # List to track runes that do not have corresponding images
-    rune_images: List[Image.Image] = []  # List to store the image objects of the rune images
+    rune_images: List = []  # List to store the image objects of the rune images
     
     # Load rune images and check for missing ones
     for rune in runes:
@@ -84,8 +96,9 @@ def create_rune_layout(_rune_image_folder: str, runes: list[str]) -> Image.Image
         raise ValueError(f"One or more runes do not have corresponding images: {missing_images}")
     
     w, h = rune_images[0].size  # Assuming all images are the same size
-    # TODO: Add code to resize images if they are not the same size, or raise an error if they cannot be resized to a common size.
     
+    # pyrefly: ignore [missing-attribute]
+    rune_images = [img.resize((w, h), Image.LANCZOS ) for img in rune_images]  # Ensure all images are the same size for consistent layout
     
     # Create output image with transparent background depending on the number of runes
     output_size = [(w,h), (0,0), (3*w,h), (0,0), (3*w, 3*h), (0,0), (6*w, 2*h)][number_of_runes-1] 
