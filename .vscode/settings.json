@@ -21,6 +21,7 @@
         "nied",
         "Othel",
         "Perdhro",
+        "pyinstaller",
         "pyrefly",
         "Raido",
         "Sigel",
@@ -32,5 +33,13 @@
     ],
     "python.pyrefly.configPath": "${workspaceFolder}/pyproject.toml",
     "python-envs.defaultEnvManager": "ms-python.python:poetry",
-    "python-envs.defaultPackageManager": "ms-python.python:poetry"
+    "python-envs.defaultPackageManager": "ms-python.python:poetry",
+    "cSpell.customDictionaries": {
+        "custom-dictionary-workspace": {
+            "name": "custom-dictionary-workspace",
+            "path": "${workspaceFolder:simplerunedrawing}/.cspell/custom-dictionary-workspace.txt",
+            "addWords": true,
+            "scope": "workspace"
+        }
+    }
 }

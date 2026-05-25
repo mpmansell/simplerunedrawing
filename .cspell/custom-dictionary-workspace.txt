@@ -1,0 +1,10 @@
+# Custom Dictionary Words
+annotationlib
+drawrunes
+popd
+pushd
+typer
+insertmacro
+SMPROGRAMS
+INSTFILES
+NSIS

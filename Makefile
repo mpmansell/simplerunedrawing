@@ -18,14 +18,19 @@ MAIN_NOTEBOOK = notebooks/notebook1.ipynb
 # Detect OS and set commands accordingly
 ifeq ($(OS), Windows_NT)
 	SHELL := pwsh.exe -noprofile -command
-	RM = Remove-Item -Recurse -Force -Erroraction SilentlyContinue
+	# RM = Remove-Item -Recurse -Force -Erroraction SilentlyContinue
+	RM = del /f/s/q 
+	CP = copy
 	MKDIR = mkdir
+	MV = move
 	SHOW_ENV = @pwsh -noprofile -command "(Get-Command python).source"
 	
 else # Unix-like OS detected
-
+ 
 	SHELL := /bin/bash
 	RM = rm -rf
+	MV = mv -f
+	CP = cp -rf
 	MKDIR = mkdir -p
 	
 	SHOW_ENV = which python
@@ -57,6 +62,9 @@ help:
 	@echo "  make git-init       Initialize a new git repository"
 	@echo ""
 	@echo "  make vsc            Start Visual Studio Code using the current project environment"	
+	@echo ""
+	@echo "  make distribution   Make a standalone executable distribution using PyInstaller"
+	@echo "  make dist-clean      Clean up build artifacts from PyInstaller"
 	@echo ""
 	@echo "  make requirements   Export dependencies to requirements.txt"
 
@@ -123,7 +131,29 @@ git-init:
 # Visual Studio Code target
 vsc:
 	$(RUN) code -n .
-
+	
+# Build a standalone executable distribution using PyInstaller
+distribution:
+	$(RUN) pyinstaller --onedir simplerunedrawing/main.py --name drawrunes --add-data "../Runes/:Runes" --add-data "../LICENSE:." --add-data "../readme.md:." --contents-directory libs --distpath dist/ --workpath build/ --specpath build/	
+	
+	# Move the Runes directory, and readme.md file from libs to the main distribution folder
+	$(MV) dist\drawrunes\libs\Runes dist\drawrunes\Runes
+	$(MV) dist\drawrunes\libs\readme.md dist\drawrunes\readme.md
+	$(MV) dist\drawrunes\libs\LICENSE dist\drawrunes\LICENSE
+	
+	# Zip the distribution
+	$(RM) dist\drawrunes.zip
+	pushd  dist\drawrunes
+	zip -q -r ..\drawrunes.zip libs readme.md Runes drawrunes.exe
+	popd
+	
+#TODO fix makefile and build options to avoid the need for this manual moving of files after the build - ideally they should be in the right place in the first place without needing to be moved around after the fact	
+	
+# Clean up build artifacts
+dist-clean:
+	$(RM) dist
+	$(RM) build
+	
 # Export requirements.txt - note that this will not include dev dependencies and is mainly for Docker use
 # Also note that 'requirements.txt' is in .gitignore to avoid confusion with Poetry's dependency management
 requirements:
