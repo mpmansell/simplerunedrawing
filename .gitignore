@@ -204,6 +204,7 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 ._ARCHIVE
-DrawRunes-Installer.exe
+
 dist/drawrunes.zip
 dist/DrawRunes-Installer.exe
+DrawRunes-Installer.exe

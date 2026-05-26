@@ -59,6 +59,8 @@ help:
 	@echo "  make poetry-install Install dependencies with Poetry (Alias for 'make install')"
 	@echo "  make poetry-update  Update dependencies with Poetry"
 	@echo ""
+	@echo "  make pre-commit-install  Install pre-commit hooks"
+	@echo ""
 	@echo "  make git-init       Initialize a new git repository"
 	@echo ""
 	@echo "  make vsc            Start Visual Studio Code using the current project environment"	
@@ -128,6 +130,9 @@ poetry-install:
 
 poetry-update:
 	$(POETRY) update
+	
+pre-commit-install
+	precommit install
 	
 # Initialize a new git repository
 git-init:

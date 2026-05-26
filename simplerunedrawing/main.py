@@ -27,7 +27,7 @@ Examples:
         python -m simplerunedrawing --number 1 --verbose
 """
 
-__version__ = '1.0.0'
+__version__ = '0.1.0'
     
 import random
 import os
@@ -103,7 +103,7 @@ def main(
         sys.exit(1)   
         
     if version:
-        rrprint("DrawRunes {version}".format(version=__version__))
+        rrprint("DrawRunes Version {version}".format(version=__version__))
         sys.exit(0)
 
     if verbose:
