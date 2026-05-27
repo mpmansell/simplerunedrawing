@@ -71,12 +71,15 @@ import sys
 import os
 from pathlib import Path
 
-from scripts.utils import run_command, move_file, create_zip
+from typing import Union, List
+
+from scripts.utils import run_command, move_file, copy_file, create_zip, print_title, \
+    inform_intention, inform_success, inform_failure, inform_info, \
+    remove_files_and_directories, remove_path
 from rich import print as rrprint
 
-display_line: str = "=" * 70
-blue_line: str = f"[bold bright_blue]{display_line}[/bold bright_blue]"
 
+version: str = "1.0.0"
 
 def main():
     """Main entry point for the DrawRunes distribution build script.
@@ -150,30 +153,33 @@ Examples:
     script_dir: Path = Path(__file__).parent
     project_root: Path = script_dir.parent
 
-    rrprint(blue_line)
-    rrprint("[bold bright_blue]DrawRunes Distribution Builder[/bold bright_blue]")
-    rrprint(blue_line)
-    rrprint(f"Project root: [bold bright_magenta]{project_root}[/bold bright_magenta]")
+    print_title("DrawRunes Distribution Builder")
+    inform_intention("Initializing build process...")
+    inform_info(f"Project root: [bold bright_magenta]{project_root}[/bold bright_magenta]")
 
     # Change to project root
-    os.chdir(project_root)
+    try:
+        os.chdir(project_root)
+        inform_success(f"Changed working directory to project root: [bold bright_magenta]{project_root}[/bold bright_magenta]")
+    except OSError as e:
+        inform_failure(f"Failed to change working directory to project root: {e}")
+        return 1
 
-    # Clean if requested
+    # Clean up old distribution files if requested
     if args.clean:
-        rrprint("\n" + blue_line)
-        rrprint("[bold bright_blue]CLEANING[/bold bright_blue]")
-        rrprint(blue_line)
+        inform_intention("\nCleaning build artifacts...")
 
-        for folder in ["dist", "build"]:
-            folder_path: Path = project_root / folder
-            if folder_path.exists():
-                rrprint(f"Removing [bold bright_magenta]{folder_path}[/bold bright_magenta] {folder}/...")
-                shutil.rmtree(folder_path)
+        all_artifacts: Union[list[str] | List[Path]] = ["dist", "build"]
+         
+         # Strip out any artifacts that do not exist to avoid unnecessary error messages during cleanup                    
+        existing_artifacts: list[Path] = [Path(f) for f in all_artifacts if (project_root / f).exists()]
+        
+        if not remove_files_and_directories(existing_artifacts, verbose=True):
+            inform_failure(f"Some artifacts could not be deleted.")
+            return 1
 
-    # Step 1: Run PyInstaller
-    rrprint("\n" + blue_line)
-    rrprint("[bold bright_blue]BUILDING[/bold bright_blue]")
-    rrprint(blue_line)
+    # Run PyInstaller
+    print_title("Building distribution with PyInstaller")
 
     pyinstaller_cmd = [
         "pyinstaller",
@@ -198,60 +204,71 @@ Examples:
     ]
 
     if not run_command(pyinstaller_cmd, "Running PyInstaller"):
-        rrprint("\n[bold bright_red]✗ Build failed!")
+        inform_failure("Build failed!")
         return 1
+    
+    inform_success("PyInstaller build completed successfully!")
 
-    # Step 2: Move files from libs/ to root
-    rrprint("\n" + blue_line)
-    rrprint("[bold bright_blue]ORGANIZING FILES[/bold bright_blue]")
-    rrprint(blue_line)
-
+    # Move files from libs/ to root
+    #
+    # Note: PyInstaller's `--contents-directory` option places additional data files in a `libs/` subdirectory within the distribution.
+    # We need to move these files back to the root of the distribution for the application to function correctly. This step ensures the final directory structure is correct for end-users.
+    #
+    # TODO: Consider modifying the PyInstaller spec file to place these files directly in the root of the distribution, eliminating the need for this post-processing step. This would simplify the build process and reduce potential points of failure.
+    # TODO: Read the `pyinstaller` manual more comprehensively and see if there's a better way to do this :)
+    
+    print_title("Move files from libs/ to root")
+    
     base_path: Path = project_root / "dist" / "drawrunes"
     libs_path: Path = base_path / "libs"
 
     files_to_move: list[tuple[Path, Path, str]] = [
         (libs_path / "Runes", base_path / "Runes", "Runes directory"),
         (libs_path / "LICENSE.md", base_path / "LICENSE.md", "LICENSE.md file"),
-        (libs_path / "readme.md", base_path / "readme.md", "readme.md file"),
-        (Path("icons/DrawRunes.ico"), base_path / "DrawRunes.ico", "DrawRunes.ico file")
-    ]
+        (libs_path / "readme.md", base_path / "readme.md", "readme.md file")
+        ]
 
     all_moved: bool = True
-    for src, dst, desc in files_to_move:
-        if not move_file(src, dst, f"Moving {desc}"):
+    for src, dst, description in files_to_move:
+        if not move_file(src, dst, f"Moving {description}"):
+            inform_failure(f"Failed to move {description}")
             all_moved = False
 
     if not all_moved:
-        rrprint("\n[bold bright_red]✗ Some files could not be moved!")
+        inform_failure("Some files could not be moved!")
         return 1
 
-    # Step 3: Create zip if not disabled
+    # Copy the icon file to `dist/`
+    destination: Path = base_path / "DrawRunes.ico"
+    source: Path = project_root / "icons" / "DrawRunes.ico"
+    
+    if not copy_file(source, destination, description=""):
+        return 1
+
+    # Create zip if not disabled
     if not args.no_zip:
-        rrprint("\n" + blue_line)
-        rrprint("[bold bright_blue]CREATING ZIP ARCHIVE[/bold bright_blue]")
-        rrprint(blue_line)
+        print_title("Creating Zip archive")
 
         zip_file = project_root / "dist" / "drawrunes.zip"
+
         if not create_zip(base_path, zip_file):
-            rrprint("\n[bold bright_red]✗ Zip creation failed!")
+            inform_failure("Zip creation failed!")
             return 1
         else:
-            rrprint("\n[bold bright_green]✓ Zip archive created successfully!")    
+            inform_success("Zip archive created successfully!")    
 
-    # Success!
-    rrprint("\n" + blue_line)
-    rrprint("[bold bright_green]✓ BUILD COMPLETE")
-    rrprint(blue_line)
+    # Build Success!
+    inform_success("Build completed successfully!")
 
     dist_path = project_root / "dist" / "drawrunes"
-    rrprint(f"\nDistribution location: [bold bright_magenta]{dist_path}[/bold bright_magenta]")
+    inform_info(f"Distribution location: [bold bright_magenta]{dist_path}[/bold bright_magenta]")
 
     if not args.no_zip:
         zip_path = project_root / "dist" / "drawrunes.zip"
-        rrprint(f"Zip archive: [bold bright_magenta]{zip_path}[/bold bright_magenta]")
+        inform_info(f"Zip archive: [bold bright_magenta]{zip_path}[/bold bright_magenta]")
 
-    rrprint(f"\n[bold bright_blue]To run the application:[/bold bright_blue]")
-    rrprint(f"  [bold bright_magenta]{dist_path / 'drawrunes.exe'}[/bold bright_magenta] --help")
+    inform_info(f"\nTo run the application:")
+    inform_info(f"  [bold bright_magenta]{dist_path / 'drawrunes.exe'}[/bold bright_magenta] --help")
 
     return 0
 

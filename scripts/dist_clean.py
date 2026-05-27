@@ -25,6 +25,9 @@ Examples in Makefile:
 import argparse
 import shutil
 import sys
+import os
+from scripts.utils import inform_intention, inform_failure, inform_info, print_title, \
+    inform_success, remove_files_and_directories, remove_path
 from pathlib import Path
 from rich import print as rrprint
 
@@ -48,6 +51,9 @@ Examples:
     )
 
     args = parser.parse_args()
+    
+    
+    print_title("DrawRunes Distribution Artifact Cleaner")
 
     # Get project root
     project_dir = Path(__file__).parent.parent.resolve()
@@ -56,7 +62,7 @@ Examples:
     artifacts = [
         project_dir / "dist",
         project_dir / "build",
-        project_dir / "DrawRunes-Installer.exe",
+        project_dir / "dist" / "DrawRunes-Installer.exe",
     ]
 
     # Also find and include any .spec files
@@ -65,14 +71,14 @@ Examples:
     all_artifacts = artifacts + spec_files
 
     # Filter to only existing items
-    existing_artifacts = [item for item in all_artifacts if item.exists()]
+    existing_artifacts = [Path(item) for item in all_artifacts if item.exists()]
 
     if not existing_artifacts:
-        print("No build artifacts found to clean.")
+        inform_info("No build artifacts found to clean.")
         return 0
 
-    print("Build artifacts to be removed:")
-    print("-" * 65)
+    inform_intention("Build artifacts to be removed:")
+   
     for item in existing_artifacts:
         if item.is_dir():
             size = sum(f.stat().st_size for f in item.rglob("*") if f.is_file())
@@ -87,40 +93,24 @@ Examples:
         for f in (item.rglob("*") if item.is_dir() else [item])
         if f.is_file()
     )
-
-    print("-" * 65)
-    rrprint(f"Total: [bold]{len(existing_artifacts)}[/bold] item(s), [bold]{total_size:,}[/bold] bytes")
-    print()
-
+    
+    print_title(f"Total: [bold]{len(existing_artifacts)}[/bold] item(s), [bold]{total_size:,}[/bold] bytes")
+ 
     if not args.force:
-        rrprint("[bright_green]DRY RUN: No files were deleted.")
-        rrprint("Use --force or -f to actually delete the artifacts.")
-        return 0
+            inform_info("[bright_green]DRY RUN: No files were deleted.")
+            inform_info("[bright_green]Use --force or -f to actually delete the artifacts.")
+            return 0
 
     # Actually delete
-    print("Deleting artifacts...")
-    errors = False
+    inform_intention("Deleting artifacts...")
 
-    for item in existing_artifacts:
-        try:
-            if item.is_dir():
-                shutil.rmtree(item)
-                rrprint(f"[bold bright_green]✓ Removed directory: {item.name}")
-            else:
-                item.unlink()
-                rrprint(f"[bold bright_green]✓ Removed file: {item.name}")
-        except Exception as e:
-            rrprint(f"[bold bright_red]✗ Error removing {item.name}: {e}")
-            errors = True
-
-    print()
-    if errors:
-        rrprint(f"[bold bright_red]Some artifacts could not be deleted.")
+    if not remove_files_and_directories(existing_artifacts, verbose=True):
+        inform_failure(f"Some artifacts could not be deleted.")
         return 1
-    else:
-        print("Cleanup complete!")
-        return 0
+
+    inform_success("Cleanup complete!")
+    return 0
 
 
-if __name__ == "__main__":
-    sys.exit(main())
+# if __name__ == "__main__":
+#     sys.exit(main())

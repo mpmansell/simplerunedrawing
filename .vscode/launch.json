@@ -5,6 +5,19 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Run scripts/dist_clean.py",
+            "type": "debugpy", 
+            "request": "launch",
+            "program": "scripts/dist_clean.py",
+            "args": [ "-f" ],
+            "console": "integratedTerminal",
+            "consoleName": "scripts/dist_clean Debug Console",
+            "logToFile": true,
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${workspaceFolder}/src"
+            }
+        },        {
             "name": "Run scripts/build_dist.py --clean",
             "type": "debugpy", 
             "request": "launch",

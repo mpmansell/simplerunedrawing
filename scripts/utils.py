@@ -19,13 +19,21 @@ Example:
     ...         create_zip("dest", "archive.zip")
 """
 
-__all__ = ["run_command", "move_file", "create_zip"]
+__all__ = ["run_command", "move_file", "copy_file", "create_zip", \
+           "remove_files_and_directories", "remove_artifacts", "remove_path", \
+            "unlink_file", "unlink_directory", \
+            "inform_intention", "inform_success", "inform_failure", "inform_note", \
+            "inform_error", "inform_info",  "inform_warning", "inform_debug", \
+            "print_subheader", "print_title", "print_subheader", "colour_filename"    
+            ]
 
+import os
 import shutil
 import subprocess
 from pathlib import Path
 from typing import List
 from rich import print as rrprint
+from typing import Union
 
 def run_command(cmd: List[str], description: str=""):
     """Execute a subprocess command with progress reporting.
@@ -68,20 +76,20 @@ def run_command(cmd: List[str], description: str=""):
         True
     """
     if description:
-        print(f"\n{description}...")
+        inform_intention(f"{description}...")
         
-    print(f"Running: {' '.join(cmd)}")
+    inform_intention(f"Running: [bold bright_cyan]{' '.join(cmd)}[/bold bright_cyan]")
     
     result: subprocess.CompletedProcess = subprocess.run(cmd)
     if result.returncode != 0:
-        rrprint(f"[bold bright_red]✗ Command failed with exit code {result.returncode}")
+        inform_failure(f"Command failed with exit code [bold bright_red]{result.returncode}[/bold bright_red]")
         return False
     
-    rrprint(f"[bold bright_green]✓ Command succeeded")
+    inform_success(f"Command succeeded")
     return True
 
 
-def move_file(src, dst, description=""):
+def move_file(src: Union[Path | str], dest: Union[Path | str], description=""):
     """Move/rename a file with automatic parent directory creation.
     
     Moves a file from source to destination path, automatically creating
@@ -134,30 +142,186 @@ def move_file(src, dst, description=""):
         >>> moved
         False
     """
-    src: Path = Path(src)
-    dst: Path = Path(dst)
     
-    if not src.exists():
-        rrprint(f"[bold bright_red]✗ Source not found: {src}")
+    source: Path = Path(src)
+    destination: Path = Path(dest)
+
+    if description:
+        inform_intention(f"\n{description}...")
+
+    if not source.exists():
+        inform_failure(f"Source not found: {src}")
+        return False
+    else:
+        try:
+            # Create parent directories for destination if they don't exist
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            
+            # Finally attempt to move the file
+            if shutil.move(source, destination):
+                inform_success(f"{colour_filename(source.name)} file moved successfully!")
+                return True
+            else:
+                inform_failure(f"{colour_filename(source.name)} file could not be moved!")
+                return False
+            
+        except Exception as e:
+            inform_failure(f"[bold bright_red]✗ Unanticipated Error while moving {colour_filename(source.name)} to {colour_filename(destination.name)}: [/bold red]{e.__new__}[/bold red]")
+            return False
+        
+ 
+ 
+
+
+def copy_file(src: Union[Path | str], dest: Union[Path | str], description=""):
+    """
+    Copy a file from source to destination.
+    
+    Args:
+        src: Source file path (Path or str).
+        dest: Destination file path (Path or str).
+        description: Optional description for the operation.
+
+    Returns:
+        bool: True if the file was copied successfully, False otherwise.
+    """
+    source: Path = Path(src)
+    destination: Path = Path(dest)
+
+    if description:
+        inform_intention(f"{description}...")
+        
+    inform_info(f"Copying {colour_filename(source.name)} to {colour_filename(destination.name)}")
+
+    if not source.exists():
+        inform_failure(f"Source not found: {src}")
+        return False
+    else:
+        try:
+            if shutil.copy2(source, destination):
+                inform_success(f"{colour_filename(source.name)} file copied successfully!")
+                return True
+            else:
+                inform_failure(f"{colour_filename(source.name)} file could not be copied!")
+                return False
+            
+        except Exception as e:
+            inform_failure(f"Unanticipated Error while copying {colour_filename(source.name)} to {colour_filename(destination.name)}: {e.__new__}")
+            return False
+
+    return True
+
+
+def unlink_file(path: Union[Path | str]):
+    """Delete a file at the specified path.
+    
+    Args:
+        path: Path to the file to be deleted (Path or str).
+    
+    Returns:
+        bool: True if the file was deleted successfully, False otherwise.
+    """
+    try:
+        Path(path).unlink()
+        inform_success(f"{colour_filename(Path(path).name)} file deleted successfully!")
+        return True
+    except Exception as e:
+        inform_failure(f"Unanticipated Error while deleting {colour_filename(Path(path).name)}: {e.__new__}")
         return False
     
-    if description:
-        print(f"\n{description}...")
+    
+def unlink_directory(path: Union[Path | str]):
+    """Delete a directory at the specified path.
+    
+    Args:    
+        path: Path to the directory to be deleted (Path or str).
+    
+    Returns:
+        bool: True if the directory was deleted successfully, False otherwise.
+    """
+    try:
+        Path(path).rmdir()
+        inform_success(f"{colour_filename(Path(path).name)} directory deleted successfully!")
+        return True
+    except Exception as e:
+        inform_failure(f"Unanticipated Error while deleting {colour_filename(Path(path).name)}: {e.__new__}")
+        return False
+
+
+def remove_path(path: Union[Path | str], verbose: bool = True):    
+    """Delete a file or directory at the specified path.
+    
+    Args:
+        path: Path to the file or directory to be removed (Path or str).
+        verbose: If True, print information about the removal.
+    
+    Returns:
+        bool: True if the file or directory was removed successfully, False otherwise.
+    """
     
     try:
-        dst.parent.mkdir(parents=True, exist_ok=True)
-
-        shutil.move(str(src), str(dst))
-        
-        rrprint(f"[bold bright_green]✓ Moved {src.name} to {dst}")
-        return True
-    
+        if Path(path).is_file():
+            Path(path).unlink()
+            if verbose:
+                inform_success(f"{colour_filename(Path(path).name)} file removed successfully!")
+        else:
+            if Path(path).is_dir():
+                shutil.rmtree(path)
+                if verbose:
+                    inform_success(f"{colour_filename(Path(path).name)} directory removed successfully!")
     except Exception as e:
-        rrprint(f"[bold bright_red]✗ Error moving {src}: {e}")
+        inform_failure(f"Unanticipated Error while removing {colour_filename(Path(path).name)}: {e.__new__}")
         return False
+    
+    return True
 
 
-def create_zip(source_dir: Path, output_file: Path):
+def remove_files_and_directories(paths: Union[List[Path] | List[str] | List[Union[Path, str]]], verbose: bool = True):
+    """Delete multiple files or directories at the specified paths.
+    
+    Args:
+        paths: List of paths to files or directories to be removed (List of Path or str).
+        verbose: If True, print information about each removal.
+    
+    Returns:    
+        bool: True if all files and directories were removed successfully, False if any removal failed.
+        
+    Note:
+        - This function attempts to remove all specified paths and reports success or failure for each.
+        - The function returns False if any individual removal fails, but it will still attempt to remove all paths regardless of individual failures.
+        - The function returns True if all paths are successfully removed.
+        
+        This function also has an alias `remove_artifacts` for readability in the context of cleaning build artifacts.  
+        
+    Example:
+        >>> paths_to_remove = ["file1.txt", "dir1", "file2.txt"]
+        >>> success = remove_files_and_directories(paths_to_remove)  # Returns True if all removed, False if any failed or could not be removed     
+        
+    
+    """
+    all_successful: bool = True
+    
+    for path in paths:
+        if verbose:
+            inform_intention(f"Removing {colour_filename(Path(path).name)}...")
+            
+        if not remove_path(path, verbose=verbose):
+            all_successful = False
+            inform_failure(f"Failed to remove {colour_filename(Path(path).name)}")
+        else:
+            inform_success(f"Removed {colour_filename(Path(path).name)} successfully!") 
+    if not all_successful:
+        if verbose:
+            inform_failure(f"Some items could not be removed. See above for details.")
+        return False
+    
+    return all_successful
+
+# alias for remove_files_and_directories for readability in context
+remove_artifacts = remove_files_and_directories
+
+
+def create_zip(source_dir: Union[Path|str], output_file: Union[Path|str]): # source_dir: Path, output_file: Union[Path|str]):
     """Create a compressed zip archive from a directory with relative paths.
     
     Creates a zip file from a source directory, preserving the directory
@@ -174,15 +338,7 @@ def create_zip(source_dir: Path, output_file: Path):
     
     Returns:
         bool: True if zip file was successfully created, False otherwise.
-    
-    Raises:
-        No exceptions are raised. Errors are caught and returned as False.
-        Possible failure reasons:
-            - Source directory does not exist
-            - `zip` command not found in PATH
-            - Insufficient permissions to read source or write output
-            - Disk space issues
-            - Invalid directory paths
+
     
     Note:
         - Temporarily changes working directory during zip creation
@@ -196,36 +352,112 @@ def create_zip(source_dir: Path, output_file: Path):
         >>> if success:
         ...     print("Zip archive created successfully!")
     """
+    # pyrefly: ignore [redefinition]   - inelegant, but I am irritated by it :)
     source_dir: Path = Path(source_dir)
+    # pyrefly: ignore [redefinition]
     output_file: Path = Path(output_file)
     
-    if not source_dir.exists():
-        rrprint(f"✗ Source directory not found: {source_dir}")
+    inform_intention(f"Creating zip archive from {colour_filename(source_dir.name)} to {colour_filename(output_file.name)}")
+    
+    if not source_dir.exists():  # Check if source directory exists
+        inform_failure(f"Source directory not found: {source_dir}")
         return False
     
-    try:
-        # Change to the source directory
-        import os
+    if output_file.exists():  # Remove existing zip if it exists, but only after confirming the source directory exists
+        if not output_file.unlink():
+            inform_failure(f"Failed to remove existing zip file: {output_file}")
+            return False
+            
+    if not output_file.parent.exists():  # Create parent directory path if it doesn't exist
+        inform_info(f"Output directory not found; creating {colour_filename(output_file.parent.name)}")
+        
+        try:
+            output_file.parent.mkdir(parents=True, exist_ok=True)
+        except Exception as e:
+            inform_failure(f"Failed to create output directory: [bold red]{e}[/bold red]")
+            return False
+
+    try: 
+        # Change to the source directory (`pushd`)
         original_cwd: str = os.getcwd()
         os.chdir(source_dir.parent)
-        
-        # Remove existing zip if it exists
-        if output_file.exists():
-            output_file.unlink()
-        
-        # Create zip with relative paths
+    except Exception as e:
+        inform_failure(f"Failed to change directory to source parent: [bold red]{e}")
+        inform_failure(f"Cannot create zip archive without access to source directory.")
+        return False
+    
+    try:  # Create zip with relative paths
         cmd: List[str] = ["zip", "-q", "-r", str(output_file.name), source_dir.name]
         result: subprocess.CompletedProcess = subprocess.run(cmd)
-        
-        os.chdir(original_cwd)
-        
+    
         if result.returncode != 0:
-            rrprint(f"✗ Zip creation failed")
+            inform_failure(f"Zip creation failed with exit code [bold red]{result.returncode}[/bold red].")
             return False
-        
-        rrprint(f"[bold bright_green]✓ Created zip file: {output_file}")
-        return True
 
+        os.chdir(original_cwd)  # `popd`
+        
     except Exception as e:
-        rrprint(f"[bold bright_red]✗ Error creating zip: {e}")
+        inform_failure(f"Error creating zip: {e}")
         return False
+
+    inform_success(f"Created zip file: {output_file}")
+    return True
+
+
+
+
+##############################################################################
+# Process message (and logging?) utilities for build tools
+##############################################################################
+
+def inform_success(message: str):
+    """Print a success message with a green tick."""
+    rrprint(f"[bold bright_green]✓ {message}")
+    
+def inform_failure(message: str):
+    """Print a failure message with a red cross."""
+    rrprint(f"[bold bright_red]✗ {message}")
+
+def inform_warning(message: str):
+    """Print a warning message with a yellow exclamation mark."""
+    rrprint(f"[bold bright_yellow]⚠ {message}")
+    
+def inform_info(message: str):
+    """Print an informational message with a blue info symbol."""
+    rrprint(f"[bold bright_blue]ℹ {message}")
+    
+def inform_debug(message: str):
+    """Print a debug message with a cyan debug symbol."""
+    rrprint(f"[bold bright_cyan]🐛 {message}")
+    
+def inform_intention(message: str):
+    """Print a message with no annotation unless already embedded in the message."""
+    rrprint(f"{message}")
+    
+def inform_note(message: str):
+    """Print a note message with a magenta note symbol."""
+    rrprint(f"[bold bright_magenta]📝 {message}")
+    
+def inform_error(message: str):
+    """Print an error message with a red cross."""
+    rrprint(f"[bold bright_red]✗ {message}")
+    
+def print_title(message: str):
+    """Print a title message with blue lines above and below."""
+    blue_line = "[bold bright_blue]" + ("=" * len(message)) + "[/bold bright_blue]"
+    rrprint("\n" + blue_line)
+    rrprint(f"[bold bright_blue]{message}[/bold bright_blue]")
+    rrprint(blue_line)
+    rrprint("\n")
+    
+def print_subheader(message: str):
+    """Print a subheader message with green lines above and below."""
+    green_line = "[bold bright_green]" + ("─" * len(message)) + "[/bold bright_green]"
+    rrprint("\n" + green_line)
+    rrprint(f"[bold bright_green]{message}[/bold bright_green]")
+    rrprint(green_line)
+    rrprint("\n")
+    
+def colour_filename(filename: str):
+    """Return a filename string colored in cyan."""
+    return f"[bold bright_magenta]{filename}[/bold bright_magenta]"
