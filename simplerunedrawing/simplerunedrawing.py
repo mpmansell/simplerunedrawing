@@ -9,7 +9,6 @@ Functions:
     runes_to_string: Convert rune tuples to human-readable string representations.
 """
 
-from annotationlib import __all__
 from typing import List, Tuple 
 import random 
 

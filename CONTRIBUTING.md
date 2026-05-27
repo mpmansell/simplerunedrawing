@@ -48,6 +48,10 @@ The following tools will need to be installed
 - GNU Make - [Make - GNU Project - Free Software Foundation GNU https://www.gnu.org › software › make](https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.gnu.org/software/make/&ved=2ahUKEwi8u5HclNKRAxXvRPEDHZWNCo4QFnoECCUQAQ&usg=AOvVaw1zM-Js4YqRdqmHDbyhZJQE)
 - Python poetry - [Poetry - Python dependency management and packaging ... Poetry - Python https://python-poetry.org](https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://python-poetry.org/&ved=2ahUKEwjmh93PlNKRAxXbR_EDHU_1FU8QFnoECBoQAQ&usg=AOvVaw3Jp8q7OO7XkcY8Tq4tDe30)
 - Visual Studio Code - [Visual Studio Code - The open source AI code editor Visual Studio Code https://code.visualstudio.com](https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://code.visualstudio.com/&ved=2ahUKEwiuraOMldKRAxWABdsEHZGiIVQQFnoECA0QAQ&usg=AOvVaw15O90sm1ios8AUpw56hCml) or your editor of choice (Makefile will need modifying to suit)
+- [Poetry](https://python-poetry.org/)
+- [PyInstaller](https://www.pyinstaller.org/)
+
+For other dependencies look at the file `pyproject.toml`.
 
 **Note**: Use `make vsc`, or `poetry run code -n .` to start Visual Studio Code as this will ensure that Intellicode, or the AI language server, will be aware of the imported modules (If, for instance, `numpy` objects are not appropriately highlighted, or typed, you might have started Vsc outside of the poetry manage virtual environment.)
 
@@ -129,11 +133,7 @@ pytest tests.test_simplerunedrawing
 
 A reminder for the maintainers on how to deploy. Make sure all your changes are committed (including an entry in HISTORY.md). Then run:
 
-```sh
-bump2version patch # possible: major / minor / patch
-git push
-git push --tags
-```
+**TO BE DONE**
 
 You can set up a [GitHub Actions workflow](https://docs.github.com/en/actions/use-cases-and-examples/building-and-testing/building-and-testing-python#publishing-to-pypi) to automatically deploy your package to PyPI when you push a new tag.
 

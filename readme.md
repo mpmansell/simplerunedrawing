@@ -6,9 +6,36 @@ Several layouts are supported, with the default being a 5 rune layout. The other
 
 Rune images can be loaded from a custom folder, or from the default folder, but just be aware that the current implementation assumes that all rune images are the same size.
 
+## Building
+
+The application can be built using the `build-dist` or `build-dist-clean` targets in the make file:
+
+- `build-dist`: Build a standalone executable distribution using PyInstaller.
+  - The distribution is created in the `dist/` directory.
+- `distribution`: Alias for `build-dist`.
+- `build-dist-clean`: Clean and rebuild the distribution.
+  - This option will remove artifacts from a previous build and then build a new distribution.
+  
+If successful, the distribution will be available in the `dist/` directory as either:
+
+- `DrawRunes-Installer.exe`, or
+- `drawrunes.zip`.
+
+[!NOTE] It is possible that these files may be available, ready built, as releases in the GitHub repository. It may be worth checking there first.
+
+See 'Installation' below for instructions on how to install the application using these files.
+
+If you wish to clean previous build artifacts independently, use the `clean` target in the make file.
+  
+The Windows installer can be built using the `win-installer` target in the make file.
+
 ## Installation
 
-To be done
+There are two ways to install the Windows application after it has been built:
+
+1. Copy `DrawRunes-Installer.exe` file to the target (Windows) computer and execute as any other application installer. The uninstaller is included in installation directory (by default `C:\Program Files (x86)\DrawRunes`).
+
+2. Extract the contents of the `drawrunes.zip` file and run the application by double-clicking the `drawrunes.exe` file.
 
 ## Usage
 
@@ -36,6 +63,15 @@ The following command line options are available:
     python src/simplerunedrawing.py -n 1 -o test.png -f custom_folder
     python src/simplerunedrawing.py -n 5 -f custom_folder
     
+## TODO
+
+There are a number of improvements that are in the pipeline, including:
+
+- full CI Integration
+- Release and version management.
+
+- More detailed development documentation
+
 ## License
 
 The MIT License (MIT)

@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>scripts.build_dist API documentation</title>
+<meta name="description" content="Build distribution script for DrawRunes …">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>scripts.build_dist</code></h1>
+</header>
+<section id="section-intro">
+<p>Build distribution script for DrawRunes.</p>
+<p>This script automates the complete process of building a standalone,
+distributable package of DrawRunes using PyInstaller:</p>
+<ol>
+<li>Runs PyInstaller to create the onedir distribution</li>
+<li>Moves data files (Runes, LICENSE, readme.md) from libs/ to root</li>
+<li>Creates a compressed zip archive of the distribution</li>
+</ol>
+<p>The script provides comprehensive progress reporting with clear section
+headers and success/failure indicators for each phase.</p>
+<h2 id="features">Features</h2>
+<ul>
+<li>Intelligent error handling with rollback capability</li>
+<li>Optional pre-build cleanup (&ndash;clean flag)</li>
+<li>Optional zip archive creation (&ndash;no-zip to skip)</li>
+<li>Cross-platform path handling using pathlib</li>
+<li>Detailed console output with visual indicators</li>
+</ul>
+<h2 id="requirements">Requirements</h2>
+<ul>
+<li>Python 3.9+</li>
+<li>PyInstaller (pip install pyinstaller)</li>
+<li><code>zip</code> command-line utility (built-in on Linux/Mac, install on Windows)</li>
+<li>Project structure with simplerunedrawing/main.py</li>
+</ul>
+<h2 id="usage">Usage</h2>
+<p>python scripts/build_dist.py
+# Build with defaults
+python scripts/build_dist.py &ndash;clean
+# Clean before building
+python scripts/build_dist.py &ndash;no-zip
+# Build but don't create zip
+python scripts/build_dist.py &ndash;help
+# Show all options</p>
+<p>Environment Variables:
+None required. Script auto-detects project root.</p>
+<h2 id="output">Output</h2>
+<ul>
+<li>dist/drawrunes/
+: Standalone application directory</li>
+<li>dist/drawrunes.zip
+: Compressed archive (unless &ndash;no-zip)</li>
+<li>build/
+: PyInstaller working directory (can be deleted)</li>
+<li>*.spec
+: PyInstaller spec file (can be deleted)</li>
+</ul>
+<p>Exit Codes:
+0 : Success
+1 : Failure (build failed, file operations failed, or zip failed)</p>
+<h2 id="examples">Examples</h2>
+<h1 id="standard-build-with-zip">Standard build with zip</h1>
+<p>$ python scripts/build_dist.py</p>
+<h1 id="clean-rebuild">Clean rebuild</h1>
+<p>$ python scripts/build_dist.py &ndash;clean</p>
+<h1 id="build-without-creating-zip-faster-for-testing">Build without creating zip (faster, for testing)</h1>
+<p>$ python scripts/build_dist.py &ndash;no-zip</p>
+<h1 id="from-makefile">From Makefile</h1>
+<p>$ make distribution
+$ make build-dist-clean</p>
+<p>See also:
+BUILD.md - Comprehensive build documentation
+scripts/utils.py - Shared utility functions
+scripts/clean.py - Artifact cleanup script</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="scripts.build_dist.main"><code class="name flex">
+<span>def <span class="ident">main</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def main():
+    &#34;&#34;&#34;Main entry point for the DrawRunes distribution build script.
+    
+    Orchestrates the complete build process:
+    1. Parses command-line arguments
+    2. Optionally cleans previous build artifacts
+    3. Runs PyInstaller to create the distribution
+    4. Reorganizes output files from libs/ to root
+    5. Creates a zip archive (unless --no-zip is specified)
+    
+    The script provides detailed progress output with clear section headers
+    and success/failure indicators for each step.
+    
+    Args:
+        None: Arguments are parsed from command line using argparse.
+    
+    Returns:
+        int: Exit code. 0 for success, 1 for any failure (build failed,
+             file move failed, or zip creation failed).
+    
+    Raises:
+        SystemExit: May be raised by argparse for invalid arguments or --help.
+    
+    Command-line Arguments:
+        --clean: Remove dist/ and build/ directories before building
+        --no-zip: Build distribution but don&#39;t create zip file
+        --help: Show help message and exit
+    
+    Side Effects:
+        - Creates/modifies directories: dist/, build/
+        - Changes current working directory to project root
+        - Prints extensive progress information to stdout
+        - Calls subprocess commands (pyinstaller, zip)
+        - Moves and removes files in the distribution directory
+    
+    Example:
+        &gt;&gt;&gt; import sys
+        &gt;&gt;&gt; exit_code = main()
+        &gt;&gt;&gt; sys.exit(exit_code)
+    
+    Environment:
+        - Requires PyInstaller to be installed
+        - Requires `zip` command-line utility
+        - Assumes Python 3.9+ (uses pathlib, type hints)
+    &#34;&#34;&#34;
+    parser = argparse.ArgumentParser(
+        description=&#34;Build DrawRunes distribution with PyInstaller&#34;,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=&#34;&#34;&#34;
+Examples:
+  python scripts/build_dist.py              # Standard build
+  python scripts/build_dist.py --clean      # Clean before building
+  python scripts/build_dist.py --no-zip     # Build without creating zip
+        &#34;&#34;&#34;,
+    )
+    parser.add_argument(
+        &#34;--clean&#34;,
+        action=&#34;store_true&#34;,
+        help=&#34;Clean dist/ and build/ directories before building&#34;,
+    )
+    parser.add_argument(
+        &#34;--no-zip&#34;,
+        action=&#34;store_true&#34;,
+        help=&#34;Build distribution but don&#39;t create zip file&#34;,
+    )
+
+    args = parser.parse_args()
+
+    # Get project root (parent of scripts folder)
+    script_dir: Path = Path(__file__).parent
+    project_root: Path = script_dir.parent
+
+    print_title(&#34;DrawRunes Distribution Builder&#34;)
+    inform_intention(&#34;Initializing build process...&#34;)
+    inform_info(f&#34;Project root: [bold bright_magenta]{project_root}[/bold bright_magenta]&#34;)
+
+    # Change to project root
+    try:
+        os.chdir(project_root)
+        inform_success(f&#34;Changed working directory to project root: [bold bright_magenta]{project_root}[/bold bright_magenta]&#34;)
+    except OSError as e:
+        inform_failure(f&#34;Failed to change working directory to project root: {e}&#34;)
+        return 1
+
+    # Clean up old distribution files if requested
+    if args.clean:
+        inform_intention(&#34;\nCleaning build artifacts...&#34;)
+
+        all_artifacts: Union[list[str] | List[Path]] = [&#34;dist&#34;, &#34;build&#34;]
+         
+         # Strip out any artifacts that do not exist to avoid unnecessary error messages during cleanup                    
+        existing_artifacts: list[Path] = [Path(f) for f in all_artifacts if (project_root / f).exists()]
+        
+        if not remove_files_and_directories(existing_artifacts, verbose=True):
+            inform_failure(f&#34;Some artifacts could not be deleted.&#34;)
+            return 1
+
+    # Run PyInstaller
+    print_title(&#34;Building distribution with PyInstaller&#34;)
+
+    pyinstaller_cmd = [
+        &#34;pyinstaller&#34;,
+        &#34;--onedir&#34;,
+        &#34;simplerunedrawing/main.py&#34;,
+        &#34;--name&#34;,
+        &#34;drawrunes&#34;,
+        &#34;--add-data&#34;,
+        &#34;../Runes/:Runes&#34;,
+        &#34;--add-data&#34;,
+        &#34;../LICENSE.md:.&#34;,
+        &#34;--add-data&#34;,
+        &#34;../readme.md:.&#34;,
+        &#34;--contents-directory&#34;,
+        &#34;libs&#34;,
+        &#34;--distpath&#34;,
+        &#34;dist/&#34;,
+        &#34;--workpath&#34;,
+        &#34;build/&#34;,
+        &#34;--specpath&#34;,
+        &#34;build/&#34;,
+    ]
+
+    if not run_command(pyinstaller_cmd, &#34;Running PyInstaller&#34;):
+        inform_failure(&#34;Build failed!&#34;)
+        return 1
+    
+    inform_success(&#34;PyInstaller build completed successfully!&#34;)
+
+    # Move files from libs/ to root
+    #
+    # Note: PyInstaller&#39;s `--contents-directory` option places additional data files in a `libs/` subdirectory within the distribution.
+    # We need to move these files back to the root of the distribution for the application to function correctly. This step ensures the final directory structure is correct for end-users.
+    #
+    # TODO: Consider modifying the PyInstaller spec file to place these files directly in the root of the distribution, eliminating the need for this post-processing step. This would simplify the build process and reduce potential points of failure.
+    # TODO: Read the `pyinstaller` manual more comprehensively and see if there&#39;s a better way to do this :)
+    
+    print_title(&#34;Move files from libs/ to root&#34;)
+    
+    base_path: Path = project_root / &#34;dist&#34; / &#34;drawrunes&#34;
+    libs_path: Path = base_path / &#34;libs&#34;
+
+    files_to_move: list[tuple[Path, Path, str]] = [
+        (libs_path / &#34;Runes&#34;, base_path / &#34;Runes&#34;, &#34;Runes directory&#34;),
+        (libs_path / &#34;LICENSE.md&#34;, base_path / &#34;LICENSE.md&#34;, &#34;LICENSE.md file&#34;),
+        (libs_path / &#34;readme.md&#34;, base_path / &#34;readme.md&#34;, &#34;readme.md file&#34;)
+        ]
+
+    all_moved: bool = True
+    for src, dst, description in files_to_move:
+        if not move_file(src, dst, f&#34;Moving {description}&#34;):
+            inform_failure(f&#34;Failed to move {description}&#34;)
+            all_moved = False
+
+    if not all_moved:
+        inform_failure(&#34;Some files could not be moved!&#34;)
+        return 1
+
+    # Copy the icon file to `dist/`
+    destination: Path = base_path / &#34;DrawRunes.ico&#34;
+    source: Path = project_root / &#34;icons&#34; / &#34;DrawRunes.ico&#34;
+    
+    if not copy_file(source, destination, description=&#34;&#34;):
+        return 1
+
+    # Create zip if not disabled
+    if not args.no_zip:
+        print_title(&#34;Creating Zip archive&#34;)
+
+        zip_file = project_root / &#34;dist&#34; / &#34;drawrunes.zip&#34;
+
+        if not create_zip(base_path, zip_file):
+            inform_failure(&#34;Zip creation failed!&#34;)
+            return 1
+        else:
+            inform_success(&#34;Zip archive created successfully!&#34;)    
+
+    # Build Success!
+    inform_success(&#34;Build completed successfully!&#34;)
+
+    dist_path = project_root / &#34;dist&#34; / &#34;drawrunes&#34;
+    inform_info(f&#34;Distribution location: [bold bright_magenta]{dist_path}[/bold bright_magenta]&#34;)
+
+    if not args.no_zip:
+        zip_path = project_root / &#34;dist&#34; / &#34;drawrunes.zip&#34;
+        inform_info(f&#34;Zip archive: [bold bright_magenta]{zip_path}[/bold bright_magenta]&#34;)
+
+    inform_info(f&#34;\nTo run the application:&#34;)
+    inform_info(f&#34;  [bold bright_magenta]{dist_path / &#39;drawrunes.exe&#39;}[/bold bright_magenta] --help&#34;)
+
+    return 0</code></pre>
+</details>
+<div class="desc"><p>Main entry point for the DrawRunes distribution build script.</p>
+<p>Orchestrates the complete build process:
+1. Parses command-line arguments
+2. Optionally cleans previous build artifacts
+3. Runs PyInstaller to create the distribution
+4. Reorganizes output files from libs/ to root
+5. Creates a zip archive (unless &ndash;no-zip is specified)</p>
+<p>The script provides detailed progress output with clear section headers
+and success/failure indicators for each step.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>None</code></strong></dt>
+<dd>Arguments are parsed from command line using argparse.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>int</code></dt>
+<dd>Exit code. 0 for success, 1 for any failure (build failed,
+file move failed, or zip creation failed).</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>SystemExit</code></dt>
+<dd>May be raised by argparse for invalid arguments or &ndash;help.</dd>
+</dl>
+<p>Command-line Arguments:
+&ndash;clean: Remove dist/ and build/ directories before building
+&ndash;no-zip: Build distribution but don't create zip file
+&ndash;help: Show help message and exit</p>
+<p>Side Effects:
+- Creates/modifies directories: dist/, build/
+- Changes current working directory to project root
+- Prints extensive progress information to stdout
+- Calls subprocess commands (pyinstaller, zip)
+- Moves and removes files in the distribution directory</p>
+<h2 id="example">Example</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; import sys
+&gt;&gt;&gt; exit_code = main()
+&gt;&gt;&gt; sys.exit(exit_code)
+</code></pre>
+<h2 id="environment">Environment</h2>
+<ul>
+<li>Requires PyInstaller to be installed</li>
+<li>Requires <code>zip</code> command-line utility</li>
+<li>Assumes Python 3.9+ (uses pathlib, type hints)</li>
+</ul></div>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="scripts" href="index.html">scripts</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="scripts.build_dist.main" href="#scripts.build_dist.main">main</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>
