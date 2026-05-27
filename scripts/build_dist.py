@@ -225,8 +225,9 @@ Examples:
     files_to_move: list[tuple[Path, Path, str]] = [
         (libs_path / "Runes", base_path / "Runes", "Runes directory"),
         (libs_path / "LICENSE.md", base_path / "LICENSE.md", "LICENSE.md file"),
-        (libs_path / "readme.md", base_path / "readme.md", "readme.md file")
-        ]
+        (libs_path / "readme.md", base_path / "readme.md", "readme.md file"),
+        (project_root / "DrawRunes-Installer.exe", project_root / "dist" / "DrawRunes-Installer.exe", "Installer executable")
+    ]
 
     all_moved: bool = True
     for src, dst, description in files_to_move:

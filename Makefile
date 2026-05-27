@@ -131,7 +131,7 @@ poetry-install:
 poetry-update:
 	$(POETRY) update
 	
-pre-commit-install
+pre-commit-install:
 	precommit install
 	
 # Initialize a new git repository
