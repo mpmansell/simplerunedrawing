@@ -399,7 +399,7 @@ def create_zip(
         >>> if success:
         ...     print("Zip archive created successfully!")
     """
-    
+
     source_dir = Path(source_dir)
     output_file = Path(output_file)
 
@@ -419,8 +419,10 @@ def create_zip(
         except Exception as e:
             inform_failure(f"Failed to remove existing zip file: {e}")
             return False
-        
-        inform_success(f"Removed existing zip file: {colour_filename(output_file.name)}")
+
+        inform_success(
+            f"Removed existing zip file: {colour_filename(output_file.name)}"
+        )
 
     if (
         not output_file.parent.exists()
@@ -530,5 +532,5 @@ def print_subheader(message: str):
 
 
 def colour_filename(filename: str):
-    """Return a filename string colored in cyan."""
+    """Return a filename string colored in magenta."""
     return f"[bold bright_magenta]{filename}[/bold bright_magenta]"

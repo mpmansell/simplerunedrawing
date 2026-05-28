@@ -209,3 +209,6 @@ dist/drawrunes.zip
 dist/DrawRunes-Installer.exe
 DrawRunes-Installer.exe
 doc/mdocs
+readme.pdf
+tests/hhhtestsimplerunedrawing.py
+doc/docdocs

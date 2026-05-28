@@ -86,6 +86,31 @@ The Windows installer can be built using the `win-installer` target in the make 
 
 The module documentation can be generated with `make html-docs` and will be found in the `doc/mdocs/` directory.
 
+### Code Structure
+
+The code is structured as follows:
+
+### `main.py`
+
+ The main entry point for the application. This file contains the primary logic and user interface for the application.
+
+### `simplerunedrawing`
+
+This module contains the logic for drawing the runes and generating images. It is split into the following files:
+
+1. `simplerunedrawing.drawing`: This file contains the logic for drawing the runes.
+2. `simplerunedrawing.create_rune_image`: This file creates rune images using the output from `simplerunedrawingdrawing`
+
+### `scripts`
+
+This module contains build scripts as well as various utility functions used in these scripts (and `main.py`).
+
+1. `build_dist.py`: Build a standalone executable distribution using PyInstaller.
+2. `dist_clean.py`: Clean build artifacts from the distribution.
+3. `utils.py`: Shared utility functions used in the build scripts.
+
+Detailed documentation for each module can be found in the `doc/mdocs/` directory after invoking `make html-docs`.
+
 ## TODO
 
 There are a number of improvements that are in the pipeline, including:

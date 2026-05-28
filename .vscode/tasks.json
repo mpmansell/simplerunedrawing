@@ -38,6 +38,40 @@
                 "panel": "dedicated"
             },
             "problemMatcher": []
+        },
+        {
+            "label": "Build windows installer",
+            "type": "shell",
+            "command": "makensis",
+            "args": [
+                "installer.nsi"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Cleanup build artifacts",
+            "type": "shell",
+            "command": "C:/Users/markm/AppData/Local/pypoetry/Cache/virtualenvs/simplerunedrawing-LVEgTZRg-py3.14/Scripts/python.exe",
+            "args": [
+                "scripts/cleanup.py"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "problemMatcher": []
         }
     ]
 }

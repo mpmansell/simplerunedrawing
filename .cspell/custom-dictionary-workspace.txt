@@ -2,6 +2,9 @@
 annotationlib
 colour
 distpath
+docdocs
+docformat
+docstrings
 drawrunes
 Erroraction
 gitbash
@@ -14,8 +17,10 @@ makensis
 noprofile
 NSIS
 onedir
+pdoc
 popd
 pushd
+pydoctor
 rrprint
 SETTINGCHANGE
 SMPROGRAMS

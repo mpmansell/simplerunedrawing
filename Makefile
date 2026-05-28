@@ -172,6 +172,9 @@ win-installer:
 html-docs:
 	pdoc --html --force --output .\doc\mdocs .\DrawRunes .\simplerunedrawing .\scripts
 
+# Build module documentation using pydoctor (alternative to pdoc, with support for Google-style docstrings)
+pydoctor-docs:
+	pydoctor --make-html --docformat google --project-name=DrawRunes --html-output=doc/docdocs DrawRunes/ simplerunedrawing/ scripts/
 	
 # Export requirements.txt - note that this will not include dev dependencies and is mainly for Docker use
 # Also note that 'requirements.txt' is in .gitignore to avoid confusion with Poetry's dependency management
