@@ -34,49 +34,45 @@
             }
         },
         {
-            "name": "Run SimpleRuneDrawing Main with Arguments",
+            "name": "DrawRunes with Arguments",
             "type": "debugpy", 
             "request": "launch",
-            "program": "src/simplerunedrawing.py",
             "console": "integratedTerminal",
-            "consoleName": "SimpleRuneDrawing Debug Console",
+            "program": "DrawRunes/main.py",
+            "consoleName": "DrawRunes Debug Console",
             "args": "${command:pickArgs}",
             "logToFile": true,
             "cwd": "${workspaceFolder}",
             "env": {
-                "PYTHONPATH": "${workspaceFolder}/src"
+                "PYTHONPATH": "${workspaceFolder}"
             }
         },
         {
-            "name": "Run SimpleRuneDrawing Main without Arguments",
+            "name": "DrawRunes: set Arguments",
             "type": "debugpy", 
             "request": "launch",
-            "program": "src/simplerunedrawing.py",
             "console": "integratedTerminal",
-            "consoleName": "SimpleRuneDrawing Debug Console",
+            "program": "DrawRunes/main.py",
+            "consoleName": "DrawRunes Debug Console",
+            "args": "-n 7 -o output.png",
             "logToFile": true,
             "cwd": "${workspaceFolder}",
             "env": {
-                "PYTHONPATH": "${workspaceFolder}/src"
+                "PYTHONPATH": "${workspaceFolder}"
             }
         },
         {
-            "name": "Run SimpleRuneDrawing with preset CLI Arguments",
+            "name": "Run DrawRunes` without Arguments",
             "type": "debugpy", 
             "request": "launch",
-            "program": "src/simplerunedrawing.py",
-            "args": [
-                // "--example-arg1", "value1",
-                // "--example-arg2", "value2"
-            ],
+            "program": "DrawRunes/main.py",
             "console": "integratedTerminal",
-            "consoleName": "SimpleRuneDrawing CLI Args Debug Console",
+            "consoleName": "DrawRunes Debug Console",
             "logToFile": true,
             "cwd": "${workspaceFolder}",
             "env": {
-                "PYTHONPATH": "${workspaceFolder}/src"
-            },
-            "envFile": "${workspaceFolder}/.env"
-        }
+                "PYTHONPATH": "${workspaceFolder}"
+            }
+        },
     ]
 }   

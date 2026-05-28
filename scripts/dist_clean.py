@@ -17,19 +17,28 @@ Usage:
 Examples in Makefile:
     clean:
         python clean.py --force
-    
+
     clean-dry:
         python clean.py
 """
 
 import argparse
+import os
 import shutil
 import sys
-import os
-from scripts.utils import inform_intention, inform_failure, inform_info, print_title, \
-    inform_success, remove_files_and_directories, remove_path
 from pathlib import Path
+
 from rich import print as rrprint
+
+from scripts.utils import (
+    inform_failure,
+    inform_info,
+    inform_intention,
+    inform_success,
+    print_title,
+    remove_files_and_directories,
+    remove_path,
+)
 
 
 def main():
@@ -51,8 +60,7 @@ Examples:
     )
 
     args = parser.parse_args()
-    
-    
+
     print_title("DrawRunes Distribution Artifact Cleaner")
 
     # Get project root
@@ -78,7 +86,7 @@ Examples:
         return 0
 
     inform_intention("Build artifacts to be removed:")
-   
+
     for item in existing_artifacts:
         if item.is_dir():
             size = sum(f.stat().st_size for f in item.rglob("*") if f.is_file())
@@ -93,13 +101,15 @@ Examples:
         for f in (item.rglob("*") if item.is_dir() else [item])
         if f.is_file()
     )
-    
-    print_title(f"Total: [bold]{len(existing_artifacts)}[/bold] item(s), [bold]{total_size:,}[/bold] bytes")
- 
+
+    print_title(
+        f"Total: [bold]{len(existing_artifacts)}[/bold] item(s), [bold]{total_size:,}[/bold] bytes"
+    )
+
     if not args.force:
-            inform_info("[bright_green]DRY RUN: No files were deleted.")
-            inform_info("[bright_green]Use --force or -f to actually delete the artifacts.")
-            return 0
+        inform_info("[bright_green]DRY RUN: No files were deleted.")
+        inform_info("[bright_green]Use --force or -f to actually delete the artifacts.")
+        return 0
 
     # Actually delete
     inform_intention("Deleting artifacts...")

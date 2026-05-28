@@ -1,10 +1,12 @@
 # Custom Dictionary Words
 annotationlib
+colour
 distpath
 drawrunes
 Erroraction
 gitbash
 HKLM
+inno
 insertmacro
 INSTFILES
 ipynb

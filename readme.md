@@ -12,7 +12,10 @@ The application can be built using the `build-dist` or `build-dist-clean` target
 
 - `build-dist`: Build a standalone executable distribution using PyInstaller.
   - The distribution is created in the `dist/` directory.
-- `distribution`: Alias for `build-dist`.
+- `distribution`: Alias for `build-dist`.\
+\
+If either `build_dist` or `distribution` targets are run, you may be asked if you wish to delete previous build artifacts. If you answer 'yes', the application will be built using the default settings.
+
 - `build-dist-clean`: Clean and rebuild the distribution.
   - This option will remove artifacts from a previous build and then build a new distribution.
   
@@ -21,13 +24,17 @@ If successful, the distribution will be available in the `dist/` directory as ei
 - `DrawRunes-Installer.exe`, or
 - `drawrunes.zip`.
 
-[!NOTE] It is possible that these files may be available, ready built, as releases in the GitHub repository. It may be worth checking there first.
+> [!NOTE] It is possible that these files may be available, ready built, as releases in the GitHub repository. It may be worth checking there first.
 
 See 'Installation' below for instructions on how to install the application using these files.
 
 If you wish to clean previous build artifacts independently, use the `clean` target in the make file.
   
 The Windows installer can be built using the `win-installer` target in the make file.
+
+## Module Documentation
+
+The module documentation can be generated with `make html-docs` and will be found in the `doc/mdocs/` directory.
 
 ## Installation
 

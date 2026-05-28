@@ -29,17 +29,33 @@ Examples:
 
 __version__ = '0.1.0'
     
-import random
 import os
+import random
 import sys
-from typing import List, Tuple
 from pathlib import Path
-from rich import print as rrprint
-    
-import typer
+from typing import List, Tuple
 
-from simplerunedrawing import draw_runes, runes_to_string
-from create_rune_image import create_rune_layout, get_rune_image_filename, valid_rune_layouts, expected_rune_filenames 
+import typer
+from rich import print as rrprint
+
+from scripts.utils import (
+    colour_filename,
+    inform_debug,
+    inform_error,
+    inform_info,
+    inform_intention,
+    inform_success,
+    inform_warning,
+    print_subheader,
+    print_title,
+)
+from simplerunedrawing.create_rune_image import (
+    create_rune_layout,
+    expected_rune_filenames,
+    get_rune_image_filename,
+    valid_rune_layouts,
+)
+from simplerunedrawing.drawing import draw_runes, runes_to_string
 
 __all__ = ["main"]
 
@@ -118,14 +134,13 @@ def main(
         print("Printing debug information about the environment and rune image folder for troubleshooting purposes.")
         print("=" * 70)
 
-        print(f"Current working directory: {os.getcwd()}")
-        print(f"Rune image folder: {rune_image_folder}")
-        print(f"Valid rune layout combinations: {valid_rune_layouts}")
+        print(f"Current working directory: {colour_filename(os.getcwd())} {os.getcwd()}")
+        print(f"Rune image folder: {colour_filename(rune_image_folder)} {rune_image_folder}")
+        print(f"Valid rune layout combinations: {colour_filename(valid_rune_layouts)} {valid_rune_layouts}")
         
         # Print the contents of the rune image folder
         print("=" * 70)
-
-        print(f"There are {len(rune_image_file_names)} images in the folder {rune_image_file_names}")
+        inform_info(f"There are {len(rune_image_file_names)} images in the folder {colour_filename(rune_image_folder)}")
         print("=" * 70)
         
         print("\n\n")
@@ -135,8 +150,13 @@ def main(
     if output == "":
         print(rune_draw)
     else:
-        create_rune_layout(rune_image_folder, rune_draw).save(output)
-
+        try:
+            create_rune_layout(rune_image_folder, rune_draw).save(output)
+        except Exception as e:
+            inform_error(f"Error occurred while saving the rune layout: {e}")
+            sys.exit(1)
+        
+        inform_success(f"Rune layout saved to {colour_filename(output)} at {output}")
 
 if __name__ == "__main__":
     app()
