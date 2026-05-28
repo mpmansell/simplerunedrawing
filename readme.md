@@ -61,15 +61,30 @@ The following command line options are available:
 
 ## Examples
 
-    python src/simplerunedrawing.py -n 1 -o test.png
-    python src/simplerunedrawing.py -n 5
+    DrawRunes -n 1 -o test.png
+    DrawRunes -n 5
     
-    python src/simplerunedrawing.py --number 1 --output test.png
-    python src/simplerunedrawing.py --number 5
+    DrawRunes --number 1 --output test.png
+    DrawRunes --number 5
 
-    python src/simplerunedrawing.py -n 1 -o test.png -f custom_folder
-    python src/simplerunedrawing.py -n 5 -f custom_folder
+    DrawRunes -n 1 -o test.png -f custom_folder
+    DrawRunes -n 5 -f custom_folder
     
+    
+## Supplying Custom Rune Images
+
+It is possible to supply custom rune images to the application. This can be done by specifying the `--rune-image-folder` option with the path to the folder containing the rune images.
+
+Rune images should be PNG files with the same size and resolution and I would suggest using the same size as the default rune images.
+
+There must be an image for each of the 24 upright runes and as well as the 24 reversed runes. In most cases, just using a copy of the upright rune, rotated through 180 degrees should suffice.
+
+Naming the images is critically important and should follow the same naming as the default runes. For example, the rune replacing `isa` should be named `isa.png`, while its reverse should be named `reversed_isa.png`. etc.
+
+If any runes are missing, or misnamed, then an error will be thrown.
+
+It is worth noting that in the current implementation, the size of the first rune read will be used to automatically resize all other runes to ensure visual consistency but, since there are a lot of potential pitfalls to resizing, it is best to ensure that all runes are the same size and to not rely upon this feature.
+
 ## TODO
 
 There are a number of improvements that are in the pipeline, including:
