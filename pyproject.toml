@@ -59,12 +59,9 @@ line-length = 88
 
 [tool.isort]
 profile = "black"
-include = '''(
-    simplerunedrawing.*.py
-  | scripts.*.py
-  DrawRunes.*.py
-)
-'''
+line_length = 88
+multi_line_output = 3
+include_trailing_comma = true
 exclude = '''
 /(
     \.git
