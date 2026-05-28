@@ -6,6 +6,56 @@ Several layouts are supported, with the default being a 5 rune layout. The other
 
 Rune images can be loaded from a custom folder, or from the default folder, but just be aware that the current implementation assumes that all rune images are the same size.
 
+## Installation
+
+There are two ways to install the Windows application after it has been built:
+
+1. Copy `DrawRunes-Installer.exe` file to the target (Windows) computer and execute as any other application installer. The uninstaller is included in installation directory (by default `C:\Program Files (x86)\DrawRunes`).
+
+2. Extract the contents of the `drawrunes.zip` file and run the application by double-clicking the `drawrunes.exe` file.
+
+These files are also available from the latest release on GitHub. Go to [https://github.com/mpmansell/simplerunedrawing/releases](https://github.com/mpmansell/simplerunedrawing/releases) to find them.
+
+## Usage
+
+The following command line options are available:
+
+    --number, -n: Number of runes to draw. Must be one of [1, 3, 5, 7]. Default is 5.
+    
+    --output, -o: Output format for the drawn runes. If provided, generates a PNG image with the specified filename; otherwise outputs rune names as text. Default is "" (text output).
+    
+    --folder, -f: Folder containing rune images. Default is "runes".    
+    
+    --verbose, -V: Enable verbose output for debugging purposes. Default is False.    
+    
+    --help, -h: Display this help message.    
+    --version, -v: Display version information.
+
+## Examples
+
+    DrawRunes -n 1 -o test.png
+    DrawRunes -n 5
+    
+    DrawRunes --number 1 --output test.png
+    DrawRunes --number 5
+
+    DrawRunes -n 1 -o test.png -f custom_folder
+    DrawRunes -n 5 -f custom_folder
+    
+## Supplying Custom Rune Images
+
+It is possible to supply custom rune images to the application. This can be done by specifying the `--rune-image-folder` option with the path to the folder containing the rune images.
+
+Rune images should be PNG files with the same size and resolution and I would suggest using the same size as the default rune images.
+
+There must be an image for each of the 24 upright runes and as well as the 24 reversed runes. In most cases, just using a copy of the upright rune, rotated through 180 degrees should suffice.
+
+Naming the images is critically important and should follow the same naming as the default runes. For example, the rune replacing `isa` should be named `isa.png`, while its reverse should be named `reversed_isa.png`. etc.
+
+If any runes are missing, or misnamed, then an error will be thrown.
+
+It is worth noting that in the current implementation, the size of the first rune read will be used to automatically resize all other runes to ensure visual consistency but, since there are a lot of potential pitfalls to resizing, it is best to ensure that all runes are the same size and to not rely upon this feature.
+
 ## Building
 
 The application can be built using the `build-dist` or `build-dist-clean` targets in the make file:
@@ -35,55 +85,6 @@ The Windows installer can be built using the `win-installer` target in the make 
 ## Module Documentation
 
 The module documentation can be generated with `make html-docs` and will be found in the `doc/mdocs/` directory.
-
-## Installation
-
-There are two ways to install the Windows application after it has been built:
-
-1. Copy `DrawRunes-Installer.exe` file to the target (Windows) computer and execute as any other application installer. The uninstaller is included in installation directory (by default `C:\Program Files (x86)\DrawRunes`).
-
-2. Extract the contents of the `drawrunes.zip` file and run the application by double-clicking the `drawrunes.exe` file.
-
-## Usage
-
-The following command line options are available:
-
-    --number, -n: Number of runes to draw. Must be one of [1, 3, 5, 7]. Default is 5.
-    
-    --output, -o: Output format for the drawn runes. If provided, generates a PNG image with the specified filename; otherwise outputs rune names as text. Default is "" (text output).
-    
-    --folder, -f: Folder containing rune images. Default is "runes".    
-    
-    --verbose, -V: Enable verbose output for debugging purposes. Default is False.    
-    
-    --help, -h: Display this help message.    
-    --version, -v: Display version information.
-
-## Examples
-
-    DrawRunes -n 1 -o test.png
-    DrawRunes -n 5
-    
-    DrawRunes --number 1 --output test.png
-    DrawRunes --number 5
-
-    DrawRunes -n 1 -o test.png -f custom_folder
-    DrawRunes -n 5 -f custom_folder
-    
-    
-## Supplying Custom Rune Images
-
-It is possible to supply custom rune images to the application. This can be done by specifying the `--rune-image-folder` option with the path to the folder containing the rune images.
-
-Rune images should be PNG files with the same size and resolution and I would suggest using the same size as the default rune images.
-
-There must be an image for each of the 24 upright runes and as well as the 24 reversed runes. In most cases, just using a copy of the upright rune, rotated through 180 degrees should suffice.
-
-Naming the images is critically important and should follow the same naming as the default runes. For example, the rune replacing `isa` should be named `isa.png`, while its reverse should be named `reversed_isa.png`. etc.
-
-If any runes are missing, or misnamed, then an error will be thrown.
-
-It is worth noting that in the current implementation, the size of the first rune read will be used to automatically resize all other runes to ensure visual consistency but, since there are a lot of potential pitfalls to resizing, it is best to ensure that all runes are the same size and to not rely upon this feature.
 
 ## TODO
 

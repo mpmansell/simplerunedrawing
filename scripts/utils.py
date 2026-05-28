@@ -413,10 +413,14 @@ def create_zip(
 
     if (
         output_file.exists()
-    ):  # Remove existing zip if it exists, but only after confirming the source directory exists
-        if not output_file.unlink():
-            inform_failure(f"Failed to remove existing zip file: {output_file}")
+    ):  # Remove existing zip if it exists, but only after confirming the source directory exists (above)
+        try:
+            output_file.unlink()
+        except Exception as e:
+            inform_failure(f"Failed to remove existing zip file: {e}")
             return False
+        
+        inform_success(f"Removed existing zip file: {colour_filename(output_file.name)}")
 
     if (
         not output_file.parent.exists()
