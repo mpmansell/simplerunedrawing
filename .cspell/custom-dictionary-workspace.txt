@@ -1,6 +1,7 @@
 # Custom Dictionary Words
 annotationlib
 colour
+Cookiecutter
 distpath
 docdocs
 docformat
@@ -23,6 +24,8 @@ pushd
 pydoctor
 rrprint
 SETTINGCHANGE
+setuptools
+simplerunedrawingdrawing
 SMPROGRAMS
 specpath
 typer
