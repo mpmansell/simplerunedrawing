@@ -75,6 +75,12 @@ help:
 	@echo ""
 	@echo "  win-installer       Build a Windows installer using NSIS (requires makensis to be installed and in PATH)"
 	@echo ""
+	@echo "  html-docs Build HTML module documentation using pdoc"
+	@echo ""
+# 	@echo "  pdf-docs    Build PDF module documentation using pdoc"
+# 	@echo ""
+# 	@echo "  all-docs Generate both HTML and PDF documentation"
+	@echo ""
 	@echo "  make requirements   Export dependencies to requirements.txt"
 
 install:
@@ -145,7 +151,7 @@ vsc:
 	$(RUN) code -n .
 	
 # Build a standalone executable distribution using PyInstaller
-distribution:
+distribution:cmd
 	$(PYTHON) scripts/build_dist.py
 	
 build-dist: distribution
@@ -161,6 +167,10 @@ clean:
 # Build a Windows installer using NSIS (requires makensis to be installed and in PATH)
 win-installer:
 	makensis installer.nsi
+	
+# Build HTML module documentation using pdoc
+html-docs:
+	pdoc --html --force --output .\doc\mdocs .\DrawRunes .\simplerunedrawing .\scripts
 
 	
 # Export requirements.txt - note that this will not include dev dependencies and is mainly for Docker use

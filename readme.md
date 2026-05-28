@@ -12,7 +12,10 @@ The application can be built using the `build-dist` or `build-dist-clean` target
 
 - `build-dist`: Build a standalone executable distribution using PyInstaller.
   - The distribution is created in the `dist/` directory.
-- `distribution`: Alias for `build-dist`.
+- `distribution`: Alias for `build-dist`.\
+\
+If either `build_dist` or `distribution` targets are run, you may be asked if you wish to delete previous build artifacts. If you answer 'yes', the application will be built using the default settings.
+
 - `build-dist-clean`: Clean and rebuild the distribution.
   - This option will remove artifacts from a previous build and then build a new distribution.
   

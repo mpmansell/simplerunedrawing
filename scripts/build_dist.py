@@ -47,13 +47,13 @@ Exit Codes:
 Examples:
     # Standard build with zip
     $ python scripts/build_dist.py
-    
+
     # Clean rebuild
     $ python scripts/build_dist.py --clean
-    
+
     # Build without creating zip (faster, for testing)
     $ python scripts/build_dist.py --no-zip
-    
+
     # From Makefile
     $ make distribution
     $ make build-dist-clean
@@ -65,62 +65,70 @@ See also:
 """
 
 import argparse
-import shutil
-import subprocess
-import sys
 import os
+import sys
 from pathlib import Path
+from typing import List, Union
 
-from typing import Union, List
-
-from scripts.utils import run_command, move_file, copy_file, create_zip, print_title, \
-    inform_intention, inform_success, inform_failure, inform_info, \
-    remove_files_and_directories, remove_path
 from rich import print as rrprint
 
+from scripts.utils import (
+    copy_file,
+    create_zip,
+    inform_failure,
+    inform_info,
+    inform_intention,
+    inform_success,
+    move_file,
+    print_title,
+    remove_files_and_directories,
+    remove_path,
+    run_command,
+)
 
 version: str = "1.0.0"
 
+
 def main():
     """Main entry point for the DrawRunes distribution build script.
-    
+
     Orchestrates the complete build process:
     1. Parses command-line arguments
     2. Optionally cleans previous build artifacts
     3. Runs PyInstaller to create the distribution
     4. Reorganizes output files from libs/ to root
     5. Creates a zip archive (unless --no-zip is specified)
-    
+
     The script provides detailed progress output with clear section headers
     and success/failure indicators for each step.
-    
+
     Args:
         None: Arguments are parsed from command line using argparse.
-    
+
     Returns:
         int: Exit code. 0 for success, 1 for any failure (build failed,
              file move failed, or zip creation failed).
-    
+
     Raises:
         SystemExit: May be raised by argparse for invalid arguments or --help.
-    
+
     Command-line Arguments:
         --clean: Remove dist/ and build/ directories before building
         --no-zip: Build distribution but don't create zip file
         --help: Show help message and exit
-    
+
     Side Effects:
         - Creates/modifies directories: dist/, build/
         - Changes current working directory to project root
         - Prints extensive progress information to stdout
         - Calls subprocess commands (pyinstaller, zip)
         - Moves and removes files in the distribution directory
-    
+
     Example:
         >>> import sys
         >>> exit_code = main()
         >>> sys.exit(exit_code)
-    
+
     Environment:
         - Requires PyInstaller to be installed
         - Requires `zip` command-line utility
@@ -155,12 +163,16 @@ Examples:
 
     print_title("DrawRunes Distribution Builder")
     inform_intention("Initializing build process...")
-    inform_info(f"Project root: [bold bright_magenta]{project_root}[/bold bright_magenta]")
+    inform_info(
+        f"Project root: [bold bright_magenta]{project_root}[/bold bright_magenta]"
+    )
 
     # Change to project root
     try:
         os.chdir(project_root)
-        inform_success(f"Changed working directory to project root: [bold bright_magenta]{project_root}[/bold bright_magenta]")
+        inform_success(
+            f"Changed working directory to project root: [bold bright_magenta]{project_root}[/bold bright_magenta]"
+        )
     except OSError as e:
         inform_failure(f"Failed to change working directory to project root: {e}")
         return 1
@@ -170,10 +182,12 @@ Examples:
         inform_intention("\nCleaning build artifacts...")
 
         all_artifacts: Union[list[str] | List[Path]] = ["dist", "build"]
-         
-         # Strip out any artifacts that do not exist to avoid unnecessary error messages during cleanup                    
-        existing_artifacts: list[Path] = [Path(f) for f in all_artifacts if (project_root / f).exists()]
-        
+
+        # Strip out any artifacts that do not exist to avoid unnecessary error messages during cleanup
+        existing_artifacts: list[Path] = [
+            Path(f) for f in all_artifacts if (project_root / f).exists()
+        ]
+
         if not remove_files_and_directories(existing_artifacts, verbose=True):
             inform_failure(f"Some artifacts could not be deleted.")
             return 1
@@ -184,7 +198,7 @@ Examples:
     pyinstaller_cmd = [
         "pyinstaller",
         "--onedir",
-        "simplerunedrawing/main.py",
+        "DrawRunes/main.py",
         "--name",
         "drawrunes",
         "--add-data",
@@ -206,8 +220,10 @@ Examples:
     if not run_command(pyinstaller_cmd, "Running PyInstaller"):
         inform_failure("Build failed!")
         return 1
-    
+
     inform_success("PyInstaller build completed successfully!")
+    
+    inform_success("Windows installer created successfully!")
 
     # Move files from libs/ to root
     #
@@ -216,9 +232,9 @@ Examples:
     #
     # TODO: Consider modifying the PyInstaller spec file to place these files directly in the root of the distribution, eliminating the need for this post-processing step. This would simplify the build process and reduce potential points of failure.
     # TODO: Read the `pyinstaller` manual more comprehensively and see if there's a better way to do this :)
-    
+
     print_title("Move files from libs/ to root")
-    
+
     base_path: Path = project_root / "dist" / "drawrunes"
     libs_path: Path = base_path / "libs"
 
@@ -226,7 +242,6 @@ Examples:
         (libs_path / "Runes", base_path / "Runes", "Runes directory"),
         (libs_path / "LICENSE.md", base_path / "LICENSE.md", "LICENSE.md file"),
         (libs_path / "readme.md", base_path / "readme.md", "readme.md file"),
-        (project_root / "DrawRunes-Installer.exe", project_root / "dist" / "DrawRunes-Installer.exe", "Installer executable")
     ]
 
     all_moved: bool = True
@@ -242,9 +257,34 @@ Examples:
     # Copy the icon file to `dist/`
     destination: Path = base_path / "DrawRunes.ico"
     source: Path = project_root / "icons" / "DrawRunes.ico"
-    
+
     if not copy_file(source, destination, description=""):
+        inform_failure("Failed to copy icon file!")
         return 1
+
+    inform_success("Icon file copied successfully!")        
+
+
+    # Create installer executable using Inno Setup (Windows only)
+    print_title("Building Windows installer with Inno Setup")
+
+    inno_cmd: List[str] = ["makensis", "installer.nsi"]
+
+    if not run_command(inno_cmd, "Running Inno Setup"):
+        inform_failure("Windows installer build failed!")
+        return 1
+    
+    inform_success("Windows installer created successfully!")
+    
+    # # Move the generated installer executable to the dist/ directory
+
+    # if not move_file( src= project_root / "build" / "DrawRunes-Installer.exe",
+    #                   dest= project_root / "dist" / "DrawRunes-Installer.exe",
+    #                   description= "Installer executable"):
+    #     inform_failure("Failed to move installer executable!")
+    #     return 1
+    # else:
+    #     inform_success("Installer executable moved successfully!")
 
     # Create zip if not disabled
     if not args.no_zip:
@@ -256,20 +296,26 @@ Examples:
             inform_failure("Zip creation failed!")
             return 1
         else:
-            inform_success("Zip archive created successfully!")    
+            inform_success("Zip archive created successfully!")
 
     # Build Success!
     inform_success("Build completed successfully!")
 
     dist_path = project_root / "dist" / "drawrunes"
-    inform_info(f"Distribution location: [bold bright_magenta]{dist_path}[/bold bright_magenta]")
+    inform_info(
+        f"Distribution location: [bold bright_magenta]{dist_path}[/bold bright_magenta]"
+    )
 
     if not args.no_zip:
         zip_path = project_root / "dist" / "drawrunes.zip"
-        inform_info(f"Zip archive: [bold bright_magenta]{zip_path}[/bold bright_magenta]")
+        inform_info(
+            f"Zip archive: [bold bright_magenta]{zip_path}[/bold bright_magenta]"
+        )
 
     inform_info(f"\nTo run the application:")
-    inform_info(f"  [bold bright_magenta]{dist_path / 'drawrunes.exe'}[/bold bright_magenta] --help")
+    inform_info(
+        f"  [bold bright_magenta]{dist_path / 'drawrunes.exe'}[/bold bright_magenta] --help"
+    )
 
     return 0
 
