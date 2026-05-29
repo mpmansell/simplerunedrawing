@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./icons/drawrunes.ico" width="150" />
+  <img src="https://github.com/mpmansell/simplerunedrawing/blob/master/icons/drawrunes.ico" width="150" />
 </p>
 
 # Simple Rune Drawing
