@@ -455,7 +455,7 @@ def create_zip(
             "zip",
             "-q",
             "-r",
-            str(output_file.name),
+            str(output_file.name),  # pyrefly: ignore
             source_dir.name,
         ]  # pyrefly: ignore
         result: subprocess.CompletedProcess[bytes] = subprocess.run(cmd)

@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./icons/drawrunes.ico" width="150" />
+</p>
+
 # Simple Rune Drawing
 
 A simple application to simulate the drawing of runes from the Elder Futhark alphabet.
