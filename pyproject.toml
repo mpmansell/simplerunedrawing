@@ -2,7 +2,7 @@
 
 [project]
 name = "simplerunedrawing"
-version = "0.1.0"
+version="0.1.0"
 description = "A Simple Rune Drawing application"
 license = "MIT"
 
