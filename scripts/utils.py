@@ -52,7 +52,7 @@ from typing import List, Optional, Union
 from rich import print as rrprint
 
 
-def run_command(cmd: List[str], description: str = ""):
+def run_command(cmd: List[str], description: str = "") -> bool:
     """Execute a subprocess command with progress reporting.
 
     Runs a command using subprocess.run() and provides formatted console
@@ -97,7 +97,7 @@ def run_command(cmd: List[str], description: str = ""):
 
     inform_intention(f"Running: [bold bright_cyan]{' '.join(cmd)}[/bold bright_cyan]")
 
-    result: subprocess.CompletedProcess = subprocess.run(cmd)
+    result: subprocess.CompletedProcess[bytes] = subprocess.run(cmd)
     if result.returncode != 0:
         inform_failure(
             f"Command failed with exit code [bold bright_red]{result.returncode}[/bold bright_red]"
@@ -108,7 +108,9 @@ def run_command(cmd: List[str], description: str = ""):
     return True
 
 
-def move_file(src: Union[Path | str], dest: Union[Path | str], description=""):
+def move_file(
+    src: Union[Path | str], dest: Union[Path | str], description: str = ""
+) -> bool:
     """Move/rename a file with automatic parent directory creation.
 
     Moves a file from source to destination path, automatically creating
@@ -195,7 +197,9 @@ def move_file(src: Union[Path | str], dest: Union[Path | str], description=""):
             return False
 
 
-def copy_file(src: Union[Path | str], dest: Union[Path | str], description=""):
+def copy_file(
+    src: Union[Path | str], dest: Union[Path | str], description: str = ""
+) -> bool:
     """
     Copy a file from source to destination.
 
@@ -239,10 +243,8 @@ def copy_file(src: Union[Path | str], dest: Union[Path | str], description=""):
             )
             return False
 
-    return True
 
-
-def unlink_file(path: Union[Path | str]):
+def unlink_file(path: Union[Path | str]) -> bool:
     """Delete a file at the specified path.
 
     Args:
@@ -262,7 +264,7 @@ def unlink_file(path: Union[Path | str]):
         return False
 
 
-def unlink_directory(path: Union[Path | str]):
+def unlink_directory(path: Union[Path | str]) -> bool:
     """Delete a directory at the specified path.
 
     Args:
@@ -284,7 +286,7 @@ def unlink_directory(path: Union[Path | str]):
         return False
 
 
-def remove_path(path: Union[Path | str], verbose: bool = True):
+def remove_path(path: Union[Path | str], verbose: bool = True) -> bool:
     """Delete a file or directory at the specified path.
 
     Args:
@@ -320,7 +322,7 @@ def remove_path(path: Union[Path | str], verbose: bool = True):
 
 def remove_files_and_directories(
     paths: Union[List[Path] | List[str] | List[Union[Path, str]]], verbose: bool = True
-):
+) -> bool:
     """Delete multiple files or directories at the specified paths.
 
     Args:
@@ -368,7 +370,7 @@ remove_artifacts = remove_files_and_directories
 
 def create_zip(
     source_dir: Union[Path | str], output_file: Union[Path | str]
-):  # source_dir: Path, output_file: Union[Path|str]):
+) -> bool:  # source_dir: Path, output_file: Union[Path|str]):
     """Create a compressed zip archive from a directory with relative paths.
 
     Creates a zip file from a source directory, preserving the directory
@@ -449,8 +451,14 @@ def create_zip(
         return False
 
     try:  # Create zip with relative paths
-        cmd: List[str] = ["zip", "-q", "-r", str(output_file.name), source_dir.name]
-        result: subprocess.CompletedProcess = subprocess.run(cmd)
+        cmd: List[str] = [
+            "zip",
+            "-q",
+            "-r",
+            str(output_file.name),
+            source_dir.name,
+        ]  # pyrefly: ignore
+        result: subprocess.CompletedProcess[bytes] = subprocess.run(cmd)
 
         if result.returncode != 0:
             inform_failure(
@@ -473,47 +481,47 @@ def create_zip(
 ##############################################################################
 
 
-def inform_success(message: str):
+def inform_success(message: str) -> None:
     """Print a success message with a green tick."""
     rrprint(f"[bold bright_green]✓ {message}")
 
 
-def inform_failure(message: str):
+def inform_failure(message: str) -> None:
     """Print a failure message with a red cross."""
     rrprint(f"[bold bright_red]✗ {message}")
 
 
-def inform_warning(message: str):
+def inform_warning(message: str) -> None:
     """Print a warning message with a yellow exclamation mark."""
     rrprint(f"[bold bright_yellow]⚠ {message}")
 
 
-def inform_info(message: str):
+def inform_info(message: str) -> None:
     """Print an informational message with a blue info symbol."""
     rrprint(f"[bold bright_blue]ℹ {message}")
 
 
-def inform_debug(message: str):
+def inform_debug(message: str) -> None:
     """Print a debug message with a cyan debug symbol."""
     rrprint(f"[bold bright_cyan]🐛 {message}")
 
 
-def inform_intention(message: str):
+def inform_intention(message: str) -> None:
     """Print a message with no annotation unless already embedded in the message."""
     rrprint(f"{message}")
 
 
-def inform_note(message: str):
+def inform_note(message: str) -> None:
     """Print a note message with a magenta note symbol."""
     rrprint(f"[bold bright_magenta]📝 {message}")
 
 
-def inform_error(message: str):
+def inform_error(message: str) -> None:
     """Print an error message with a red cross."""
     rrprint(f"[bold bright_red]✗ {message}")
 
 
-def print_title(message: str):
+def print_title(message: str) -> None:
     """Print a title message with blue lines above and below."""
     blue_line = "[bold bright_blue]" + ("=" * len(message)) + "[/bold bright_blue]"
     rrprint("\n" + blue_line)
@@ -522,7 +530,7 @@ def print_title(message: str):
     rrprint("\n")
 
 
-def print_subheader(message: str):
+def print_subheader(message: str) -> None:
     """Print a subheader message with green lines above and below."""
     green_line = "[bold bright_green]" + ("─" * len(message)) + "[/bold bright_green]"
     rrprint("\n" + green_line)
@@ -531,6 +539,6 @@ def print_subheader(message: str):
     rrprint("\n")
 
 
-def colour_filename(filename: str):
+def colour_filename(filename: str) -> str:
     """Return a filename string colored in magenta."""
     return f"[bold bright_magenta]{filename}[/bold bright_magenta]"
