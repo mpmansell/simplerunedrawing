@@ -19,28 +19,28 @@ MAIN_NOTEBOOK = notebooks/notebook1.ipynb
 ifeq ($(OS), Windows_NT)
 	SHELL := pwsh.exe -noprofile -command
 	# RM = Remove-Item -Recurse -Force -Erroraction SilentlyContinue
-	RM = del /f/s/q 
+	RM = del /f/s/q
 	CP = copy
 	MKDIR = mkdir
 	MV = move
 	SHOW_ENV = @pwsh -noprofile -command "(Get-Command python).source"
-	
+
 else # Unix-like OS detected
- 
+
 	SHELL := /bin/bash
 	RM = rm -rf
 	MV = mv -f
 	CP = cp -rf
 	MKDIR = mkdir -p
-	
+
 	SHOW_ENV = which python
 endif
 
 # Tool commands
-PYTHON = python 
+PYTHON = python
 
 RUN = poetry run # Use 'poetry run' to ensure commands run in the Poetry-managed environment
-POETRY = poetry 
+POETRY = poetry
 
 
 # Phony targets
@@ -63,7 +63,9 @@ help:
 	@echo ""
 	@echo "  make git-init       Initialize a new git repository"
 	@echo ""
-	@echo "  make vsc            Start Visual Studio Code using the current project environment"	
+	@echo "  make vsc            Start Visual Studio Code using the current project environment"
+	@echo ""
+	@echo "pre-commit-autoupdate Run 'pre-commit autoupdate' to update pre-commit hooks to their latest versions"
 	@echo ""
 	@echo "  make distribution   Make a standalone executable distribution using PyInstaller"
 	@echo "  make build-dist     Alias for make distribution"
@@ -125,7 +127,7 @@ venv-activate-gitbash:
 show-env:
 	@echo "Virtual environment Python path:"
 	@$(SHOW_ENV)
-	
+
 # Run the application
 run-notebook: # venv-activate
 	$(RUN) code -n . $(MAIN_NOTEBOOK)
@@ -136,29 +138,33 @@ poetry-install:
 
 poetry-update:
 	$(POETRY) update
-	
+
 pre-commit-install:
 	precommit install
-	
+
 # Initialize a new git repository
 git-init:
 	git init
 	git add .
 	git commit -m "Initial commit"
-	
+
 # Visual Studio Code target
 vsc:
 	$(RUN) code -n .
-	
+
+# Update pre-commit hooks to their latest versions
+pre-commit-autoupdate:
+	pre-commit autoupdate
+
 # Build a standalone executable distribution using PyInstaller
 distribution:cmd
 	$(PYTHON) scripts/build_dist.py
-	
+
 build-dist: distribution
 
-# Clean and rebuild distribution	
+# Clean and rebuild distribution
 build-dist-clean:
-	$(PYTHON) scripts/build_dist.py --clean	
+	$(PYTHON) scripts/build_dist.py --clean
 
 # Clean all build artifacts (dist/, build/, executables, spec files)
 clean:
@@ -167,7 +173,7 @@ clean:
 # Build a Windows installer using NSIS (requires makensis to be installed and in PATH)
 win-installer:
 	makensis installer.nsi
-	
+
 # Build HTML module documentation using pdoc
 html-docs:
 	pdoc --html --force --output .\doc\mdocs .\DrawRunes .\simplerunedrawing .\scripts
@@ -175,7 +181,7 @@ html-docs:
 # Build module documentation using pydoctor (alternative to pdoc, with support for Google-style docstrings)
 pydoctor-docs:
 	pydoctor --make-html --docformat google --project-name=DrawRunes --html-output=doc/docdocs DrawRunes/ simplerunedrawing/ scripts/
-	
+
 # Export requirements.txt - note that this will not include dev dependencies and is mainly for Docker use
 # Also note that 'requirements.txt' is in .gitignore to avoid confusion with Poetry's dependency management
 requirements:
