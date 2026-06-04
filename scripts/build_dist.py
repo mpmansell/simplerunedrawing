@@ -89,7 +89,7 @@ from scripts.utils import (
 version: str = "1.0.0"
 
 
-def main():
+def main() -> None:
     """Main entry point for the DrawRunes distribution build script.
 
     Orchestrates the complete build process:
@@ -175,7 +175,7 @@ Examples:
         )
     except OSError as e:
         inform_failure(f"Failed to change working directory to project root: {e}")
-        return 1
+        sys.exit(1)
 
     # Clean up old distribution files if requested
     if args.clean:
@@ -190,7 +190,7 @@ Examples:
 
         if not remove_files_and_directories(existing_artifacts, verbose=True):
             inform_failure(f"Some artifacts could not be deleted.")
-            return 1
+            sys.exit(1)
 
     # Run PyInstaller
     print_title("Building distribution with PyInstaller")
@@ -219,10 +219,10 @@ Examples:
 
     if not run_command(pyinstaller_cmd, "Running PyInstaller"):
         inform_failure("Build failed!")
-        return 1
+        sys.exit(1)
 
     inform_success("PyInstaller build completed successfully!")
-    
+
     inform_success("Windows installer created successfully!")
 
     # Move files from libs/ to root
@@ -252,7 +252,7 @@ Examples:
 
     if not all_moved:
         inform_failure("Some files could not be moved!")
-        return 1
+        sys.exit(1)
 
     # Copy the icon file to `dist/`
     destination: Path = base_path / "DrawRunes.ico"
@@ -260,10 +260,9 @@ Examples:
 
     if not copy_file(source, destination, description=""):
         inform_failure("Failed to copy icon file!")
-        return 1
+        sys.exit(1)
 
-    inform_success("Icon file copied successfully!")        
-
+    inform_success("Icon file copied successfully!")
 
     # Create installer executable using Inno Setup (Windows only)
     print_title("Building Windows installer with Inno Setup")
@@ -272,10 +271,10 @@ Examples:
 
     if not run_command(inno_cmd, "Running Inno Setup"):
         inform_failure("Windows installer build failed!")
-        return 1
-    
+        sys.exit(1)
+
     inform_success("Windows installer created successfully!")
-    
+
     # # Move the generated installer executable to the dist/ directory
 
     # if not move_file( src= project_root / "build" / "DrawRunes-Installer.exe",
@@ -294,7 +293,7 @@ Examples:
 
         if not create_zip(base_path, zip_file):
             inform_failure("Zip creation failed!")
-            return 1
+            sys.exit(1)
         else:
             inform_success("Zip archive created successfully!")
 
@@ -317,8 +316,8 @@ Examples:
         f"  [bold bright_magenta]{dist_path / 'drawrunes.exe'}[/bold bright_magenta] --help"
     )
 
-    return 0
+    sys.exit(0)
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

@@ -41,7 +41,7 @@ from scripts.utils import (
 )
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(
         description="Clean build artifacts from the DrawRunes project",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -83,7 +83,7 @@ Examples:
 
     if not existing_artifacts:
         inform_info("No build artifacts found to clean.")
-        return 0
+        sys.exit(0)
 
     inform_intention("Build artifacts to be removed:")
 
@@ -109,17 +109,17 @@ Examples:
     if not args.force:
         inform_info("[bright_green]DRY RUN: No files were deleted.")
         inform_info("[bright_green]Use --force or -f to actually delete the artifacts.")
-        return 0
+        sys.exit(0)
 
     # Actually delete
     inform_intention("Deleting artifacts...")
 
     if not remove_files_and_directories(existing_artifacts, verbose=True):
         inform_failure(f"Some artifacts could not be deleted.")
-        return 1
+        sys.exit(1)
 
     inform_success("Cleanup complete!")
-    return 0
+    sys.exit(0)
 
 
 # if __name__ == "__main__":

@@ -10,7 +10,7 @@ Command Line Options:
     --output, -o: Output format for the drawn runes. If provided, generates a PNG image
         with the specified filename; otherwise outputs rune names as text.
         Default: "" (text output)
-    --rune-image-folder, -r: Path to a custom folder containing the rune images. 
+    --rune-image-folder, -r: Path to a custom folder containing the rune images.
     --verbose, -V: Enable verbose output for debugging purposes.
         Default: False
     --debug, -D: Enable debug output for debugging purposes.
@@ -19,21 +19,21 @@ Command Line Options:
 Examples:
     Draw 3 runes and display as text:
         python -m simplerunedrawing --number 3
-    
+
     Draw 5 runes and save as PNG:
         python -m simplerunedrawing --number 5 --output runes.png
-    
+
     Draw with verbose output:
         python -m simplerunedrawing --number 1 --verbose
 """
 
-__version__ = '0.1.0'
-    
+__version__ = "0.1.0"
+
 import os
 import random
 import sys
 from pathlib import Path
-from typing import List, Tuple
+from typing import List, Tuple, no_type_check
 
 import typer
 from rich import print as rrprint
@@ -62,62 +62,65 @@ __all__ = ["main"]
 app = typer.Typer()
 
 # Set uo default values for the CLI options
-Valid_Numbers: List[int] = [1,3,5,7]  # Valid numbers of runes to draw
+Valid_Numbers: List[int] = [1, 3, 5, 7]  # Valid numbers of runes to draw
 
 # Find default runes image folder
 current_file = Path(__file__).resolve()
-rune_image_folder_default = current_file.parent.parent / "Runes"  # Default path to rune images
+rune_image_folder_default = (
+    current_file.parent.parent / "Runes"
+)  # Default path to rune images
 
+
+@no_type_check
 @app.command()
 def main(
     number: int = typer.Option(
-        5, 
-        "--number", "-n", 
-        help="Number of runes to draw (must be one of 1,3,5 or 7)", 
-        case_sensitive=False
+        5,
+        "--number",
+        "-n",
+        help="Number of runes to draw (must be one of 1,3,5 or 7)",
+        case_sensitive=False,
     ),
     output: str = typer.Option(
-        "", 
-        "--output", "-o",
-        help="Output format for the drawn runes. If switch applied, then a PNG image will be generated, else text."
+        "",
+        "--output",
+        "-o",
+        help="Output format for the drawn runes. If switch applied, then a PNG image will be generated, else text.",
     ),
     rune_image_folder: str = typer.Option(
         rune_image_folder_default,
-        "--rune-image-folder", "-r",
-        help="Path to the folder containing the rune images"
+        "--rune-image-folder",
+        "-r",
+        help="Path to the folder containing the rune images",
     ),
     verbose: bool = typer.Option(
-        False,
-        "-V", "--verbose",
-        help="Enable verbose output for debugging purposes."
+        False, "-V", "--verbose", help="Enable verbose output for debugging purposes."
     ),
     version: bool = typer.Option(
-        False,
-        "--version", "-v",
-        help="Show the version of the application and exit."
+        False, "--version", "-v", help="Show the version of the application and exit."
     ),
-    debug: bool = typer.Option( 
-        False,
-        "-D", "--debug",
-        help="Enable debug output for debugging purposes."    
-    )
-):
+    debug: bool = typer.Option(
+        False, "-D", "--debug", help="Enable debug output for debugging purposes."
+    ),
+) -> None:
 
     if number not in Valid_Numbers:
-        raise typer.BadParameter("Number must be one of 1,3,5 or 7")   
+        raise typer.BadParameter("Number must be one of 1,3,5 or 7")
 
     # Get list of rune image filenames in the specified folder for validation and debugging purposes
     rune_image_file_names = [f.name for f in Path(rune_image_folder).glob("*.png")]
-    
+
     # Check for missing image files
     expected_rune_filenames_set = set(expected_rune_filenames)
     missing_files = expected_rune_filenames_set - set(rune_image_file_names)
     if missing_files:
         rrprint("=" * 70)
         rrprint(f"[bold red]Missing rune image files: [/bold red]{missing_files}.\n")
-        rrprint("[bold red]Please ensure all expected rune images are present in the folder before restarting.")
-        sys.exit(1)   
-        
+        rrprint(
+            "[bold red]Please ensure all expected rune images are present in the folder before restarting."
+        )
+        sys.exit(1)
+
     if version:
         rrprint("DrawRunes Version {version}".format(version=__version__))
         sys.exit(0)
@@ -128,23 +131,33 @@ def main(
         print(f"Rune image folder: {rune_image_folder}")
         print(f"Verbose output: {verbose}")
         print(f"Debug output: {debug}")
-        
+
     if debug:
         print("=" * 70)
-        print("Printing debug information about the environment and rune image folder for troubleshooting purposes.")
+        print(
+            "Printing debug information about the environment and rune image folder for troubleshooting purposes."
+        )
         print("=" * 70)
 
-        print(f"Current working directory: {colour_filename(os.getcwd())} {os.getcwd()}")
-        print(f"Rune image folder: {colour_filename(rune_image_folder)} {rune_image_folder}")
-        print(f"Valid rune layout combinations: {colour_filename(valid_rune_layouts)} {valid_rune_layouts}")
-        
+        print(
+            f"Current working directory: {colour_filename(os.getcwd())} {os.getcwd()}"
+        )
+        print(
+            f"Rune image folder: {colour_filename(rune_image_folder)} {rune_image_folder}"
+        )
+        print(
+            f"Valid rune layout combinations: {colour_filename(str(valid_rune_layouts))} "
+        )
+
         # Print the contents of the rune image folder
         print("=" * 70)
-        inform_info(f"There are {len(rune_image_file_names)} images in the folder {colour_filename(rune_image_folder)}")
+        inform_info(
+            f"There are {len(rune_image_file_names)} images in the folder {colour_filename(rune_image_folder)}"
+        )
         print("=" * 70)
-        
+
         print("\n\n")
-    
+
     # run app
     rune_draw = runes_to_string(draw_runes(number))
     if output == "":
@@ -155,8 +168,9 @@ def main(
         except Exception as e:
             inform_error(f"Error occurred while saving the rune layout: {e}")
             sys.exit(1)
-        
+
         inform_success(f"Rune layout saved to {colour_filename(output)} at {output}")
+
 
 if __name__ == "__main__":
     app()

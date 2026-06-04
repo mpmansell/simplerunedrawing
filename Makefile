@@ -65,7 +65,9 @@ help:
 	@echo ""
 	@echo "  make vsc            Start Visual Studio Code using the current project environment"
 	@echo ""
-	@echo "pre-commit-autoupdate Run 'pre-commit autoupdate' to update pre-commit hooks to their latest versions"
+	@echo "  bumpversion-preview  This will show you what files would be changed and how the version would be updated, without actually making any changes."
+	@echo ""
+	@echo "  pre-commit-autoupdate Run 'pre-commit autoupdate' to update pre-commit hooks to their latest versions"
 	@echo ""
 	@echo "  make distribution   Make a standalone executable distribution using PyInstaller"
 	@echo "  make build-dist     Alias for make distribution"
@@ -151,6 +153,15 @@ git-init:
 # Visual Studio Code target
 vsc:
 	$(RUN) code -n .
+
+# This will show you what files would be changed and how the version would be updated, without actually making any changes.
+bumpversion-preview:
+	bumpversion patch --allow-dirty --dry-run --verbose
+	@echo ""
+	@echo "This will show you what files would be changed and how the version would be updated, without actually making any changes."
+	@echo "Run 'make bumpversion' to perform the actual version bump after previewing."
+	@echo ""
+
 
 # Update pre-commit hooks to their latest versions
 pre-commit-autoupdate:

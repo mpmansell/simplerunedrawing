@@ -16,7 +16,7 @@ __all__ = ["draw_runes", "runes_to_string", "RUNES"]
 
 
 # List of Elder Futhark runes
-RUNES: list = [
+RUNES: List[str] = [
     "Ansuz",
     "Beorc",
     "Daeg",

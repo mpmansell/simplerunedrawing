@@ -16,13 +16,12 @@ dependencies = [
     "pillow (>=12.2.0,<13.0.0)",
     "typer (>=0.25.1,<0.26.0)",
     "rich (>=15.0.0,<16.0.0)",
-    "bumpversion (>=0.6.0,<0.7.0)",
-
     ]
 
 [dependency-groups]
 dev = [
     "pre-commit (>=4.6.0,<5.0.0)",
+    "pre-commit-hooks (>=6.0.0,<7.0.0)",
     "isort (>=7.0.0,<8.0.0)",
     "black (>=25.11.0,<26.0.0)",
     "mypy (>=1.19.1,<2.0.0)",
@@ -43,8 +42,7 @@ jupyter = [
 
 
 test = [
-    "pytest (>=8.4.2,<9.0.0)",
-    "tox (>=4.32.0,<5.0.0)"
+    "pytest (>=8.4.2,<9.0.0)"
 ]
 
 [tool.poetry]
@@ -76,9 +74,6 @@ exclude = '''
 
 [tool.mypy]
 strict = true
-
-[tool.tox]
-envs = ["py312", "py313", "py314"]
 
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.29.5"

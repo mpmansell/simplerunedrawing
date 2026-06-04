@@ -133,7 +133,9 @@ def create_rune_layout(_rune_image_folder: str, runes: list[str]) -> Image.Image
     missing_images: List[str] = (
         []
     )  # List to track runes that do not have corresponding images
-    rune_images: List = []  # List to store the image objects of the rune images
+    rune_images: List[Image.Image] = (
+        []
+    )  # List to store the image objects of the rune images
 
     # Load rune images and check for missing ones
     for rune in runes:
@@ -152,7 +154,7 @@ def create_rune_layout(_rune_image_folder: str, runes: list[str]) -> Image.Image
 
     # pyrefly: ignore [missing-attribute]
     rune_images = [
-        img.resize((w, h), Image.LANCZOS) for img in rune_images
+        img.resize((w, h), Image.Resampling.LANCZOS) for img in rune_images
     ]  # Ensure all images are the same size for consistent layout
 
     # Create output image with transparent background depending on the number of runes
